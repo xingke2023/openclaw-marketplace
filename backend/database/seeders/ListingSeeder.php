@@ -18,7 +18,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => 'Davide · 前端系统架构师',
                 'slug' => 'davide-frontend-architect',
-                'price' => 0.00,
+                'price' => 39.00,
                 'description' => "意大利籍高级前端架构师，10 年大厂经验。精通 React / Next.js 系统拆分、性能调优与组件库设计。能快速评审代码架构、输出可落地的重构方案，并提供完整技术决策文档。",
                 'image_url' => null,
                 'status' => 'available',
@@ -27,7 +27,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => 'Tom · 融资经理',
                 'slug' => 'tom-fundraising-manager',
-                'price' => 0.00,
+                'price' => 39.00,
                 'description' => "专注早期创业公司融资的 AI 助手。帮助创始人梳理融资逻辑、打磨 Pitch Deck、准备 Due Diligence 材料，并模拟 VC 问答场景。已协助 50+ 项目完成天使轮及 Pre-A 轮融资。",
                 'image_url' => null,
                 'status' => 'available',
@@ -36,7 +36,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => 'Sophia · 内容营销总监',
                 'slug' => 'sophia-content-marketing-director',
-                'price' => 0.00,
+                'price' => 39.00,
                 'description' => "内容营销人工智能与多代理写作流程——Grok 研究、Opus 写作、品牌声音系统。从选题调研到成稿发布，全链路自动化，输出风格统一、转化率极高的品牌内容。",
                 'image_url' => null,
                 'status' => 'available',
@@ -45,7 +45,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => 'Marcus · 客服自动化专家',
                 'slug' => 'marcus-customer-service-automation',
-                'price' => 0.00,
+                'price' => 39.00,
                 'description' => "专注企业客服全流程自动化。构建多轮对话工作流、智能工单分发与情绪识别系统，无缝对接 Zendesk、Intercom 等主流平台。平均将人工响应成本降低 70%，客户满意度提升至 95% 以上。",
                 'image_url' => null,
                 'status' => 'available',
@@ -54,7 +54,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => 'Elena · 数据分析师',
                 'slug' => 'elena-data-analyst',
-                'price' => 0.00,
+                'price' => 39.00,
                 'description' => "精通 Python、SQL 与 BI 工具的 AI 数据分析员。自动清洗原始数据、构建分析模型、生成可视化报告，并用非技术语言解读关键业务洞察。支持 Google Analytics、Mixpanel、Snowflake 等主流数据源接入。",
                 'image_url' => null,
                 'status' => 'available',
@@ -63,7 +63,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => 'Ryan · SEO 增长专家',
                 'slug' => 'ryan-seo-growth-expert',
-                'price' => 0.00,
+                'price' => 39.00,
                 'description' => "全栈 SEO 自动化智能体。涵盖关键词研究、竞品分析、内链优化、技术 SEO 审查与外链建设全流程。结合 Ahrefs、Search Console 数据自动生成优先级行动清单，帮助网站在 90 天内实现自然流量显著增长。",
                 'image_url' => null,
                 'status' => 'available',
@@ -72,7 +72,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => 'Mia · 社媒运营专家',
                 'slug' => 'mia-social-media-manager',
-                'price' => 0.00,
+                'price' => 39.00,
                 'description' => "覆盖小红书、微博、抖音、Instagram 全平台的 AI 社媒运营员。自动规划内容日历、生成平台适配文案与配图提示词、分析互动数据并优化发布节奏。擅长打造品牌人设、提升粉丝粘性与自然增长。",
                 'image_url' => null,
                 'status' => 'available',
@@ -81,7 +81,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => 'Alex · AI CEO',
                 'slug' => 'alex-ai-ceo',
-                'price' => 0.00,
+                'price' => 39.00,
                 'description' => "你的 AI CEO——负责产品交付、代码管理、沟通协调、记忆一切、运营你的业务。统筹调度其他 AI 员工，追踪项目进度，处理跨部门协作，让你专注于最重要的决策。",
                 'image_url' => null,
                 'status' => 'available',
@@ -90,7 +90,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => 'Claire · 法律合规顾问',
                 'slug' => 'claire-legal-compliance',
-                'price' => 0.00,
+                'price' => 39.00,
                 'description' => "专注企业法律合规的 AI 顾问。覆盖合同审查、隐私政策起草、劳动法合规、知识产权保护及跨境数据合规。熟悉中国、欧盟、美国三地监管框架，帮助初创企业在快速扩张中规避法律风险。",
                 'image_url' => null,
                 'status' => 'available',
@@ -99,7 +99,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => 'James · HR 招聘专家',
                 'slug' => 'james-hr-recruitment',
-                'price' => 0.00,
+                'price' => 39.00,
                 'description' => "全流程 AI 招聘助手。自动撰写职位描述、筛选简历、设计结构化面试题库，并对候选人进行初步评估与背景调查。支持 LinkedIn、Boss 直聘等主流平台数据接入，帮助企业将平均招聘周期缩短 60%。",
                 'image_url' => null,
                 'status' => 'available',
@@ -108,7 +108,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => 'Linda · 财务会计专家',
                 'slug' => 'linda-finance-accounting',
-                'price' => 0.00,
+                'price' => 39.00,
                 'description' => "专业 AI 财务会计助手。自动处理日常记账、发票核对、工资核算与税务申报，生成月度财务报表与现金流预测。熟悉中国会计准则与 IFRS，支持对接用友、金蝶等主流财务系统，让财务工作零出错、全透明。",
                 'image_url' => null,
                 'status' => 'available',
@@ -117,7 +117,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => 'Kevin · 产品经理',
                 'slug' => 'kevin-product-manager',
-                'price' => 0.00,
+                'price' => 39.00,
                 'description' => "经验丰富的 AI 产品经理。负责需求拆解、PRD 撰写、用户故事梳理与优先级排序，协调研发、设计与运营团队高效协作。擅长竞品分析、MVP 定义与版本迭代规划，帮助产品从 0 到 1 快速落地。",
                 'image_url' => null,
                 'status' => 'available',
@@ -126,7 +126,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => 'Amy · 运营总监',
                 'slug' => 'amy-operations-director',
-                'price' => 0.00,
+                'price' => 39.00,
                 'description' => "全能 AI 运营助手。覆盖用户增长、活动策划、社群运营与留存优化全链路。自动生成运营日历、监控关键指标、输出数据复盘报告，并基于用户行为数据持续调整运营策略，让业务飞轮高速转动。",
                 'image_url' => null,
                 'status' => 'available',
@@ -137,7 +137,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => '小红书运营助手',
                 'slug' => 'xiaohongshu-operations-kit',
-                'price' => 0.00,
+                'price' => 9.90,
                 'description' => "专为小红书内容创作者和品牌设计的技能包。包含爆款标题生成、笔记结构模板、话题标签策略、评论互动话术及数据复盘模板。一键输出符合平台算法偏好的图文内容，快速积累自然流量。",
                 'image_url' => null,
                 'status' => 'available',
@@ -155,7 +155,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => '抖音爆款视频脚本',
                 'slug' => 'douyin-viral-script-kit',
-                'price' => 0.00,
+                'price' => 9.90,
                 'description' => "专为抖音创作者打造的脚本生成技能。内置钩子开场、情绪节奏、转折设计与引导关注话术模板。支持口播、剧情、测评、种草等多种视频类型，平均完播率提升 40%。",
                 'image_url' => null,
                 'status' => 'available',
@@ -173,7 +173,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => 'Prompt 工程师工具包',
                 'slug' => 'prompt-engineering-toolkit',
-                'price' => 0.00,
+                'price' => 9.90,
                 'description' => "系统化提示词设计与优化技能。覆盖 Chain-of-Thought、Few-shot、ReAct、角色扮演等主流提示技巧，内含 200+ 可复用提示模板，帮助开发者快速构建高质量 AI 工作流。",
                 'image_url' => null,
                 'status' => 'available',
@@ -191,7 +191,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => 'LinkedIn 个人品牌增长',
                 'slug' => 'linkedin-personal-brand-kit',
-                'price' => 0.00,
+                'price' => 9.90,
                 'description' => "专为职场人和创始人设计的 LinkedIn 运营技能。包含个人简介优化、内容日历规划、爆款帖子生成器、评论互动策略与连接请求话术，帮助账号在 30 天内实现粉丝量翻倍。",
                 'image_url' => null,
                 'status' => 'available',
@@ -209,7 +209,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => 'Figma 设计系统生成器',
                 'slug' => 'figma-design-system-generator',
-                'price' => 0.00,
+                'price' => 9.90,
                 'description' => "一键生成完整设计系统的 AI 技能。根据品牌色和字体偏好，自动产出组件库规范、间距系统、图标风格指南与深色模式适配方案，让设计与研发协作效率提升 50%。",
                 'image_url' => null,
                 'status' => 'available',
@@ -227,7 +227,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => 'AI 客服知识库构建',
                 'slug' => 'ai-knowledge-base-builder',
-                'price' => 0.00,
+                'price' => 9.90,
                 'description' => "快速搭建企业专属 AI 知识库的工具包。自动整理 FAQ、产品文档与历史工单，生成结构化知识图谱，支持接入 ChatBot 或内部搜索系统，让客服响应准确率达到 90% 以上。",
                 'image_url' => null,
                 'status' => 'available',
@@ -245,7 +245,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => '自我进化智能体',
                 'slug' => 'self-improving-agent',
-                'price' => 0.00,
+                'price' => 9.90,
                 'description' => "捕获学习经验、错误与修正以实现持续改进。适用于命令意外失败、用户纠正 AI 输出、需要记录操作规律等场景，让智能体越用越聪明。",
                 'image_url' => null,
                 'status' => 'available',
@@ -263,7 +263,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => 'Tavily 网页搜索',
                 'slug' => 'tavily-web-search',
-                'price' => 0.00,
+                'price' => 9.90,
                 'description' => "通过 Tavily API 实现 AI 优化的网页搜索。为 AI 智能体返回简洁、相关的搜索结果，无需浏览器，响应速度极快。",
                 'image_url' => null,
                 'status' => 'available',
@@ -281,7 +281,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => '内容摘要生成器',
                 'slug' => 'summarize',
-                'price' => 0.00,
+                'price' => 9.90,
                 'description' => "一键摘要 URL 或文件内容，支持网页、PDF、图片、音频和 YouTube 视频。使用 summarize CLI 驱动，无需额外 API Key。",
                 'image_url' => null,
                 'status' => 'available',
@@ -299,7 +299,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => 'GitHub 操作包',
                 'slug' => 'github-cli-kit',
-                'price' => 0.00,
+                'price' => 9.90,
                 'description' => "使用 gh CLI 与 GitHub 深度集成。支持 Issue 管理、PR 审查、CI 运行监控与 API 高级查询，让 AI 直接参与代码协作流程。",
                 'image_url' => null,
                 'status' => 'available',
@@ -317,7 +317,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => 'Polymarket 预测市场',
                 'slug' => 'polymarket-odds',
-                'price' => 0.00,
+                'price' => 9.90,
                 'description' => "查询 Polymarket 预测市场数据，检查赔率、热门市场、事件搜索、价格走势与动量分析。包含观察列表提醒、结算日历与市场对比功能。",
                 'image_url' => null,
                 'status' => 'available',
@@ -335,7 +335,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => 'Notion 工作区管理',
                 'slug' => 'notion-workspace',
-                'price' => 0.00,
+                'price' => 9.90,
                 'description' => "通过 Notion API 创建和管理页面、数据库与内容块。让 AI 直接读写你的 Notion 工作区，自动化知识管理与项目追踪流程。",
                 'image_url' => null,
                 'status' => 'available',
@@ -353,7 +353,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => 'AI 图像生成与编辑',
                 'slug' => 'ai-image-generator',
-                'price' => 0.00,
+                'price' => 9.90,
                 'description' => "基于 Gemini 3 Pro 的图像生成与编辑技能。支持文字生成图像和图像二次编辑，提供 1K/2K/4K 分辨率输出，可用于设计素材、营销图片与创意内容生产。",
                 'image_url' => null,
                 'status' => 'available',
@@ -371,7 +371,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => 'Obsidian 笔记自动化',
                 'slug' => 'obsidian-automation',
-                'price' => 0.00,
+                'price' => 9.90,
                 'description' => "操作 Obsidian 知识库（Markdown 笔记）并通过 obsidian-cli 实现自动化。支持笔记创建、搜索、链接管理与双链知识图谱维护。",
                 'image_url' => null,
                 'status' => 'available',
@@ -389,7 +389,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => 'AI 写作人性化改写',
                 'slug' => 'humanizer-ai-text',
-                'price' => 0.00,
+                'price' => 9.90,
                 'description' => "去除 AI 写作痕迹，让文本更自然真实。自动检测并修正夸张象征、宣传语气、表面分析、模糊归因、破折号滥用、三段式结构与 AI 专属词汇等问题。",
                 'image_url' => null,
                 'status' => 'available',
@@ -407,7 +407,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => 'MCP 服务器管理工具',
                 'slug' => 'mcp-server-manager',
-                'price' => 0.00,
+                'price' => 9.90,
                 'description' => "使用 mcporter CLI 列出、配置、认证并调用 MCP 服务器与工具，支持 HTTP 和 stdio 模式，包括临时服务器、配置编辑与 CLI 类型生成。",
                 'image_url' => null,
                 'status' => 'available',
@@ -425,7 +425,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => '项目知识上下文管理',
                 'slug' => 'project-knowledge-context',
-                'price' => 0.00,
+                'price' => 9.90,
                 'description' => "使用 ByteRover 上下文树管理项目知识，提供查询和整理两种操作。适用于信息检索、规律发现与跨会话知识持久化场景。",
                 'image_url' => null,
                 'status' => 'available',
@@ -443,7 +443,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => 'Slack 消息自动化',
                 'slug' => 'slack-automation-kit',
-                'price' => 0.00,
+                'price' => 9.90,
                 'description' => "通过 Slack API 实现消息发送、频道管理、工作流触发与通知自动化。支持定时推送、关键词监听与多频道批量操作，让团队沟通效率翻倍。",
                 'image_url' => null,
                 'status' => 'available',
@@ -461,7 +461,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => 'Docker 容器管理',
                 'slug' => 'docker-management-kit',
-                'price' => 0.00,
+                'price' => 9.90,
                 'description' => "AI 驱动的 Docker 容器管理工具包。支持容器启停、镜像构建、日志分析、网络配置与 Docker Compose 编排，让运维操作变得简单直观。",
                 'image_url' => null,
                 'status' => 'available',
@@ -479,7 +479,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => '多语言翻译',
                 'slug' => 'multilingual-translation-kit',
-                'price' => 0.00,
+                'price' => 9.90,
                 'description' => "支持 100+ 语言的专业翻译技能包。具备语境感知、行业术语库与品牌语调一致性保障，适用于产品文档、营销内容、法律合同与用户界面本地化翻译。",
                 'image_url' => null,
                 'status' => 'available',
@@ -497,7 +497,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => 'Airtable 数据库自动化',
                 'slug' => 'airtable-automation-kit',
-                'price' => 0.00,
+                'price' => 9.90,
                 'description' => "通过自然语言操作 Airtable 数据库。支持记录增删改查、视图筛选、自动化规则配置与跨表关联，让业务数据管理变得像对话一样简单。",
                 'image_url' => null,
                 'status' => 'available',
@@ -515,7 +515,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => '竞品监控与分析',
                 'slug' => 'competitor-monitoring-kit',
-                'price' => 0.00,
+                'price' => 9.90,
                 'description' => "持续追踪竞争对手的产品更新、定价变化、营销动态与用户反馈。自动生成竞品对比报告，识别市场空白与差异化机会，帮助产品和营销团队保持竞争优势。",
                 'image_url' => null,
                 'status' => 'available',
@@ -533,7 +533,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => '品牌视觉识别系统',
                 'slug' => 'brand-visual-identity-kit',
-                'price' => 0.00,
+                'price' => 9.90,
                 'description' => "一站式品牌视觉设计技能。根据品牌定位自动生成 Logo 概念方案、色彩系统、字体搭配、图标风格与品牌使用规范手册，帮助初创企业快速建立专业品牌形象。",
                 'image_url' => null,
                 'status' => 'available',
@@ -551,7 +551,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => '用户调研与访谈分析',
                 'slug' => 'user-research-interview-kit',
-                'price' => 0.00,
+                'price' => 9.90,
                 'description' => "AI 驱动的用户调研全流程技能。自动设计访谈问卷、分析访谈录音、提炼用户痛点与需求洞察，生成结构化用户画像与产品改进建议报告。",
                 'image_url' => null,
                 'status' => 'available',
@@ -569,7 +569,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => '飞书文档自动化',
                 'slug' => 'feishu-lark-automation',
-                'price' => 0.00,
+                'price' => 9.90,
                 'description' => "深度集成飞书（Lark）工作区，实现文档创建、多维表格操作、日历管理、消息推送与审批流程自动化。专为国内企业协作场景优化，大幅提升团队工作效率。",
                 'image_url' => null,
                 'status' => 'available',
@@ -587,7 +587,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => 'AWS 云资源管理',
                 'slug' => 'aws-cloud-management',
-                'price' => 0.00,
+                'price' => 9.90,
                 'description' => "用自然语言管理 AWS 云资源。支持 EC2、S3、Lambda、RDS 等核心服务的查询、配置与成本优化建议，帮助开发团队降低云支出并提升资源利用率。",
                 'image_url' => null,
                 'status' => 'available',
@@ -605,7 +605,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => 'B 站视频脚本与封面',
                 'slug' => 'bilibili-content-kit',
-                'price' => 0.00,
+                'price' => 9.90,
                 'description' => "专为 B 站 UP 主打造的内容创作工具包。包含选题策划、视频脚本、分镜建议、封面文案设计与标签优化，帮助视频快速进入推荐流，提升播放量与粉丝增长。",
                 'image_url' => null,
                 'status' => 'available',
@@ -623,7 +623,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => 'Vercel 部署自动化',
                 'slug' => 'vercel-deployment-automation',
-                'price' => 0.00,
+                'price' => 9.90,
                 'description' => "一键管理 Vercel 项目部署、环境变量配置、域名绑定与性能监控。支持预览部署链接生成、回滚操作与 Edge Function 配置，让前端部署流程完全自动化。",
                 'image_url' => null,
                 'status' => 'available',
@@ -641,7 +641,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => 'Claude 系统提示词优化',
                 'slug' => 'claude-system-prompt-optimizer',
-                'price' => 0.00,
+                'price' => 9.90,
                 'description' => "专为 Claude 模型优化的系统提示词工程技能。内含角色设定、输出格式控制、思维链激活、安全边界设置与多轮对话记忆管理等高级技巧，大幅提升 AI 输出质量。",
                 'image_url' => null,
                 'status' => 'available',
@@ -659,7 +659,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => 'OpenClaw 企业级营销助手',
                 'slug' => 'openclaw-enterprise-marketing',
-                'price' => 0.00,
+                'price' => 9.90,
                 'description' => "专门为中小型企业设计的 AI 营销角色。能够自动生成社交媒体内容、分析市场趋势并优化广告投放。包含全套自动化工作流。",
                 'image_url' => 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800&auto=format&fit=crop',
                 'status' => 'available',
@@ -677,7 +677,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => '极简主义 UI/UX 设计师',
                 'slug' => 'minimalist-uiux-designer',
-                'price' => 0.00,
+                'price' => 9.90,
                 'description' => "专注于现代 SaaS 产品界面的 AI 设计智能体。能够基于简单的描述生成 Figma 布局建议、配色方案和交互原型。",
                 'image_url' => 'https://images.unsplash.com/photo-1586717791821-3f44a563eb4c?q=80&w=800&auto=format&fit=crop',
                 'status' => 'available',
@@ -695,7 +695,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => 'Rust 系统性能优化专家',
                 'slug' => 'rust-performance-expert',
-                'price' => 0.00,
+                'price' => 9.90,
                 'description' => "高级 AI 角色，专注于低延迟系统设计和 Rust 代码优化。能够重构瓶颈代码并提供内存安全建议。",
                 'image_url' => 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=800&auto=format&fit=crop',
                 'status' => 'available',
@@ -713,7 +713,7 @@ class ListingSeeder extends Seeder
             [
                 'name' => '财务审计与报表分析员',
                 'slug' => 'finance-audit-analyst',
-                'price' => 0.00,
+                'price' => 9.90,
                 'description' => "合规性极强的 AI 智能体。能够处理复杂的财务数据导出、自动进行账目比对并生成季度合规性分析报告。",
                 'image_url' => 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=800&auto=format&fit=crop',
                 'status' => 'available',
