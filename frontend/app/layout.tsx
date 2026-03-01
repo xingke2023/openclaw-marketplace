@@ -15,8 +15,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Laravel + Next.js App",
-  description: "Full-stack app with Laravel API and Next.js frontend",
+  title: "OpenClaw 机器人员工市场",
+  description: "发现、部署可实际使用的 OpenClaw AI 员工",
+  icons: {
+    icon: '/favicon.png',
+  },
 };
 
 export default function RootLayout({

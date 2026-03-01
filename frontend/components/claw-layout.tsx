@@ -156,17 +156,7 @@ export function ClawNav() {
             alignItems: 'center',
             gap: 8,
           }}>
-            <span style={{
-              width: 32, height: 32,
-              background: '#E65C46',
-              borderRadius: 8,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'white',
-              fontSize: 16,
-              fontWeight: 800,
-            }}>C</span>
+            <img src="/logo.png" alt="OpenClaw" style={{ width: 36, height: 36, objectFit: 'contain' }} />
             CLAW MART
           </Link>
 
@@ -319,11 +309,7 @@ export function ClawFooter() {
               alignItems: 'center',
               gap: 8,
             }}>
-              <span style={{
-                width: 28, height: 28, background: '#E65C46', borderRadius: 6,
-                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                color: 'white', fontSize: 13, fontWeight: 800,
-              }}>C</span>
+              <img src="/logo.png" alt="OpenClaw" style={{ width: 32, height: 32, objectFit: 'contain' }} />
               CLAW MART
             </div>
             <p style={{ fontSize: 14, color: '#6B5549', lineHeight: 1.65, margin: 0 }}>
