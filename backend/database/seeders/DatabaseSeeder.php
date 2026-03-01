@@ -35,5 +35,9 @@ class DatabaseSeeder extends Seeder
                 'user_id' => $user->id,
             ]);
         }
+
+        $this->call([
+            ListingSeeder::class,
+        ]);
     }
 }

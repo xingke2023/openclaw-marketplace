@@ -72,4 +72,33 @@ class AuthController extends Controller
             'user' => $request->user(),
         ]);
     }
+
+    public function updateProfile(Request $request)
+    {
+        $request->validate([
+            'name' => ['sometimes', 'string', 'max:255'],
+            'avatar_url' => ['sometimes', 'nullable', 'url', 'max:2048'],
+            'website_url' => ['sometimes', 'nullable', 'url', 'max:2048'],
+            'bio' => ['sometimes', 'nullable', 'string', 'max:1000'],
+        ]);
+
+        $user = $request->user();
+        $user->update($request->only(['name', 'avatar_url', 'website_url', 'bio']));
+
+        return response()->json([
+            'message' => 'Profile updated successfully',
+            'user' => $user->fresh(),
+        ]);
+    }
+
+    public function becomeSeller(Request $request)
+    {
+        $user = $request->user();
+        $user->update(['is_seller' => true]);
+
+        return response()->json([
+            'message' => 'You are now a seller',
+            'user' => $user->fresh(),
+        ]);
+    }
 }

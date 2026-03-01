@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { authApi } from './api';
-import type { User, LoginCredentials, RegisterCredentials } from './api';
+import type { User, LoginCredentials, RegisterCredentials, UpdateProfileData } from './api';
 
 interface AuthContextType {
   user: User | null;
@@ -11,6 +11,8 @@ interface AuthContextType {
   login: (credentials: LoginCredentials) => Promise<void>;
   register: (credentials: RegisterCredentials) => Promise<void>;
   logout: () => Promise<void>;
+  updateProfile: (data: UpdateProfileData) => Promise<void>;
+  becomeSeller: () => Promise<void>;
   isAuthenticated: boolean;
 }
 
@@ -62,6 +64,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem('auth_user');
   };
 
+  const updateProfile = async (data: UpdateProfileData) => {
+    if (!token) return;
+    const response = await authApi.updateProfile(data, token);
+    setUser(response.user);
+    localStorage.setItem('auth_user', JSON.stringify(response.user));
+  };
+
+  const becomeSeller = async () => {
+    if (!token) return;
+    const response = await authApi.becomeSeller(token);
+    setUser(response.user);
+    localStorage.setItem('auth_user', JSON.stringify(response.user));
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -71,6 +87,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         login,
         register,
         logout,
+        updateProfile,
+        becomeSeller,
         isAuthenticated: !!user && !!token,
       }}
     >

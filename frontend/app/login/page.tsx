@@ -4,12 +4,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/lib/auth-context';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ThemeToggle } from '@/components/theme-toggle';
-import { ThemeColorPicker } from '@/components/theme-color-picker';
+import { clawStyles } from "@/components/claw-layout";
+import { Loader2 } from 'lucide-react';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -23,70 +19,106 @@ export default function LoginPage() {
     e.preventDefault();
     setError('');
     setLoading(true);
-
     try {
       await login({ email, password });
       router.push('/');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Login failed');
+      setError(err instanceof Error ? err.message : '登录失败，请检查邮箱和密码');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center px-4">
-      <div className="absolute right-4 top-4 flex items-center gap-2">
-        <ThemeColorPicker />
-        <ThemeToggle />
-      </div>
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Login</CardTitle>
-          <CardDescription>
-            Enter your credentials to access your account
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+    <>
+      <style>{clawStyles}</style>
+      <div className="claw-page" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+        {/* Simple top bar */}
+        <div style={{ padding: '20px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(42,31,25,0.08)' }}>
+          <Link href="/" style={{
+            fontFamily: "'Bricolage Grotesque', 'Manrope', sans-serif",
+            fontSize: 18, fontWeight: 700, color: '#2A1F19', textDecoration: 'none',
+            display: 'flex', alignItems: 'center', gap: 8,
+          }}>
+            <span style={{ width: 28, height: 28, background: '#E65C46', borderRadius: 6, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: 14, fontWeight: 800 }}>C</span>
+            CLAW MART
+          </Link>
+          <Link href="/register" style={{ fontSize: 13, color: '#6B5549', textDecoration: 'none', fontFamily: "'Manrope', sans-serif" }}>
+            没有账号？<span style={{ color: '#E65C46', fontWeight: 600 }}>立即注册</span>
+          </Link>
+        </div>
+
+        {/* Form */}
+        <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '48px 24px' }}>
+          <div style={{ width: '100%', maxWidth: 400 }}>
+            <div style={{ marginBottom: 32 }}>
+              <h1 style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 32, fontWeight: 800, color: '#2A1F19', margin: '0 0 8px', letterSpacing: '-0.02em' }}>
+                欢迎回来
+              </h1>
+              <p style={{ fontSize: 15, color: '#6B5549', margin: 0 }}>登录您的 Claw Mart 账号</p>
+            </div>
+
             {error && (
-              <div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive">
+              <div style={{
+                background: 'rgba(230, 92, 70, 0.1)',
+                border: '1px solid rgba(230, 92, 70, 0.3)',
+                borderRadius: 8,
+                padding: '12px 16px',
+                fontSize: 14,
+                color: '#bf3f30',
+                marginBottom: 20,
+              }}>
                 {error}
               </div>
             )}
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="john@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
+
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+              <div>
+                <label className="claw-form-label">邮箱地址</label>
+                <input
+                  type="email"
+                  placeholder="your@email.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="claw-input"
+                />
+              </div>
+              <div>
+                <label className="claw-form-label">密码</label>
+                <input
+                  type="password"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="claw-input"
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={loading}
+                className="claw-btn-primary"
+                style={{ width: '100%', justifyContent: 'center', padding: '12px', fontSize: 15, fontWeight: 700 }}
+              >
+                {loading ? <Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} /> : '登录'}
+              </button>
+            </form>
+
+            <div style={{ marginTop: 24, padding: '16px', background: 'rgba(42,31,25,0.04)', borderRadius: 10 }}>
+              <p style={{ fontSize: 12, color: '#9e8074', margin: '0 0 8px', fontWeight: 600 }}>演示账号：</p>
+              <p style={{ fontSize: 13, color: '#6B5549', margin: 0 }}>📧 demo@example.com<br />🔑 password</p>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Logging in...' : 'Login'}
-            </Button>
-            <p className="text-center text-sm text-muted-foreground">
-              Don't have an account?{' '}
-              <Link href="/register" className="underline">
-                Register
+
+            <p style={{ textAlign: 'center', marginTop: 24, fontSize: 14, color: '#6B5549' }}>
+              还没有账号？{' '}
+              <Link href="/register" style={{ color: '#E65C46', fontWeight: 600, textDecoration: 'none' }}>
+                免费注册
               </Link>
             </p>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }

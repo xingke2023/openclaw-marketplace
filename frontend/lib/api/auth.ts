@@ -1,5 +1,5 @@
 import { apiClient } from './client';
-import type { AuthResponse, LoginCredentials, RegisterCredentials, User } from './types';
+import type { AuthResponse, LoginCredentials, RegisterCredentials, UpdateProfileData, User } from './types';
 
 export const authApi = {
   register: (data: RegisterCredentials) =>
@@ -13,4 +13,10 @@ export const authApi = {
 
   me: (token: string) =>
     apiClient.get<{ user: User }>('/me', token),
+
+  updateProfile: (data: UpdateProfileData, token: string) =>
+    apiClient.put<{ message: string; user: User }>('/profile', data, token),
+
+  becomeSeller: (token: string) =>
+    apiClient.post<{ message: string; user: User }>('/become-seller', undefined, token),
 };

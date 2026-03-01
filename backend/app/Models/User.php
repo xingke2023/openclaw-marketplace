@@ -22,6 +22,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'avatar_url',
+        'website_url',
+        'bio',
+        'is_seller',
     ];
 
     /**
@@ -44,11 +48,17 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_seller' => 'boolean',
         ];
     }
 
     public function posts()
     {
         return $this->hasMany(Post::class);
+    }
+
+    public function purchases()
+    {
+        return $this->hasMany(Purchase::class);
     }
 }

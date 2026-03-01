@@ -2,16 +2,40 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PostController;
+use App\Http\Controllers\Api\ListingController;
+use App\Http\Controllers\Api\PurchaseController;
+use App\Http\Controllers\Api\SourcingRequestController;
 use Illuminate\Support\Facades\Route;
 
 // Public routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
+// Listing routes (public)
+Route::get('/listings', [ListingController::class, 'index']);
+Route::get('/listings/{slug}', [ListingController::class, 'show']);
+
+// Sourcing routes
+Route::post('/sourcing', [SourcingRequestController::class, 'store']);
+
+
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
+    Route::put('/profile', [AuthController::class, 'updateProfile']);
+    Route::post('/become-seller', [AuthController::class, 'becomeSeller']);
+
+    // Purchases
+    Route::get('/purchases', [PurchaseController::class, 'index']);
+    Route::post('/purchases', [PurchaseController::class, 'store']);
+    Route::get('/purchases/check/{listingId}', [PurchaseController::class, 'check']);
+
+    // Seller listing management
+    Route::get('/my-listings', [ListingController::class, 'myListings']);
+    Route::post('/listings', [ListingController::class, 'store']);
+    Route::put('/listings/{id}', [ListingController::class, 'update']);
+    Route::delete('/listings/{id}', [ListingController::class, 'destroy']);
 });
 
 // Post routes (index and show are public, rest require auth)

@@ -135,7 +135,10 @@ php artisan migrate
 1. Create `frontend/app/[pagename]/page.tsx`
 2. Use `'use client'` directive if using hooks or interactivity
 3. Import `useAuth` from `@/lib/auth-context` for auth state
-4. Use components from `@/components/ui/` for UI
+4. Import `ClawNav`, `ClawFooter`, `clawStyles` from `@/components/claw-layout` for consistent UI
+5. Wrap page with `<style>{clawStyles}</style>` and `<div className="claw-page">` as root
+6. **Never write a custom navbar or footer** — always use `<ClawNav />` and `<ClawFooter />`
+7. For protected pages, redirect to `/login` if `!isAuthenticated` after loading
 
 ### Working with Database
 ```bash
@@ -193,6 +196,148 @@ protected function casts(): array {
 
 ### Authorization
 PostController implements owner-only operations by checking `$post->user_id !== $request->user()->id`
+
+### Seller-only endpoints
+Use a private `requireSeller(Request $request)` helper that calls `abort(403)` if `!$request->user()->is_seller`. See `ListingController` for reference pattern.
+
+### Slug generation
+`ListingController` has a private `uniqueSlug(string $name, ?int $excludeId)` helper using `Str::slug()` with a numeric suffix loop to ensure uniqueness. Reuse this pattern for any model needing unique slugs.
+
+## Frontend Design System (ClawHub Style)
+
+The frontend follows the **clawhub.ai** design aesthetic — warm, organic, modern. All pages must adhere to this system.
+
+### Color Palette
+| Token | Value | Usage |
+|-------|-------|-------|
+| Background | `#F8F2ED` | Page background (warm cream) |
+| Text primary | `#2A1F19` | Headings, body text |
+| Text secondary | `#6B5549` | Subtitles, descriptions |
+| Text muted | `#9e8074` | Meta info, labels, placeholders |
+| Accent / CTA | `#E65C46` | Buttons, links, highlights, accent spans |
+| Card background | `#FFFFFF` | Cards, modals, inputs |
+| Muted section bg | `rgba(240, 232, 225, 0.5)` | Alternating sections |
+| Footer background | `#F0E8E1` | Footer area |
+| Border | `rgba(42, 31, 25, 0.1)` | Dividers, card borders, input borders |
+
+### Typography
+- **Display/Heading font**: `Bricolage Grotesque` (weights 600–800)
+- **Body font**: `Manrope` (weights 400–700)
+- Loaded via Google Fonts in `clawStyles` string
+- `font-family: 'Manrope', 'Bricolage Grotesque', sans-serif` on `.claw-page`
+
+### Shared Layout Components (`frontend/components/claw-layout.tsx`)
+- `<ClawNav />` — sticky navbar with logo, nav links, and **user dropdown** (Dashboard / 我的购买 / 我的设置 / Start Selling / 退出登录). Always use this, never write a custom navbar.
+- `<ClawFooter />` — 4-column footer with links and social links
+- `clawStyles` — CSS string containing all shared utility classes (import with `<style>{clawStyles}</style>`)
+
+**ClawNav dropdown behaviour**: when logged in, shows avatar + name button. Dropdown includes Dashboard link, purchases, settings, "Start Selling" (hidden once user is a seller), and logout.
+
+### Utility CSS Classes (from `clawStyles`)
+| Class | Purpose |
+|-------|---------|
+| `.claw-page` | Root page wrapper (sets font, bg, min-height) |
+| `.claw-container` | Max-width 1200px centered container |
+| `.claw-section` | Section with padding 56px 24px, max-width 1200px |
+| `.claw-label` | Coral pill label for section tags |
+| `.claw-h1` | Display heading (52px, 800 weight, Bricolage) |
+| `.claw-h2` | Section heading (32px, 700 weight, Bricolage) |
+| `.claw-lead` | Lead paragraph (17px, secondary color) |
+| `.claw-body` | Body paragraph (15px, secondary color) |
+| `.claw-btn-primary` | Coral filled button (`#E65C46`) |
+| `.claw-btn-ghost` | White outlined button |
+| `.claw-card` | White rounded card with border and shadow |
+| `.claw-card-hover` | Adds hover lift animation to cards |
+| `.claw-divider` | `<hr>` section divider |
+| `.claw-step-num` | Numbered circle for step lists |
+| `.claw-input` | Styled form input |
+| `.claw-textarea` | Styled form textarea |
+| `.claw-form-label` | Form field label |
+| `.claw-chip` | Pill-shaped selectable tag |
+| `.claw-skeleton` | Loading shimmer animation |
+| `.claw-accordion` | Accordion container |
+| `.claw-accordion-btn` | Accordion toggle button |
+| `.claw-accordion-body` | Accordion content area |
+| `.claw-highlight-box` | Left-bordered callout box (coral accent) |
+| `.claw-accent` | Inline coral color span |
+
+### Page Template
+```tsx
+'use client';
+import { ClawNav, ClawFooter, clawStyles } from "@/components/claw-layout";
+
+export default function MyPage() {
+  return (
+    <>
+      <style>{clawStyles}</style>
+      <div className="claw-page">
+        <ClawNav />
+        <main>
+          <section style={{ padding: '72px 24px', maxWidth: 1200, margin: '0 auto' }}>
+            <div className="claw-label">Section Label</div>
+            <h1 className="claw-h1">Page <span className="claw-accent">Title</span></h1>
+            <p className="claw-lead">Lead description text.</p>
+          </section>
+          <hr className="claw-divider" />
+          {/* More sections... */}
+        </main>
+        <ClawFooter />
+      </div>
+    </>
+  );
+}
+```
+
+### Design Rules
+- **Never** use Tailwind `bg-background`, `text-foreground`, `text-muted-foreground` etc. on new pages — use inline styles or claw classes instead
+- Alternate sections: white bg vs `.claw-muted-section` (rgba warm tint)
+- Always use `<hr className="claw-divider" />` between major sections
+- Headings use `fontFamily: "'Bricolage Grotesque', sans-serif"` when set inline
+- Cards have `borderRadius: 14px`, white background, `border: 1px solid rgba(42,31,25,0.07)`
+- CTA buttons always use `#E65C46` coral red as primary color
+
+## Business Domain: CLAW MART
+
+This is an **AI skill marketplace** (AI 技能集市). Key concepts:
+
+- **Listing** — an AI agent/skill/prompt pack sold on the platform. Has name, slug, price, description, category, status, user_id (seller).
+- **Purchase** — a user acquiring a listing. Free listings (price=0) are acquired immediately on click. Paid listings need a payment flow (not yet implemented).
+- **Seller** — a user with `is_seller=true`. Can create/edit/delete their own listings via Dashboard → 我的销售.
+- **Install page** — after purchasing, users go to `/install/[slug]` which shows two modes: "已有 OpenClaw" (Skill ID + ZIP download) and "帮我安装" (managed install service via sourcing request).
+
+### Core User Flows
+1. Browse listings (`/`) → click listing (`/listings/[slug]`) → free acquire → dashboard purchases
+2. Purchased items in Dashboard → click → `/install/[slug]` (install instructions)
+3. Register → Dashboard → Start Selling → become seller → upload listings → 我的销售 manage
+4. Settings: avatar URL, nickname, website URL, bio
+
+### Key Models & Relationships
+- `User` hasMany `Purchase`, hasMany `Listing` (as seller)
+- `Listing` belongsTo `User` (seller), hasMany `Purchase`
+- `Purchase` belongsTo `User`, belongsTo `Listing`; unique on (user_id, listing_id)
+
+### User Fields (beyond standard)
+`avatar_url`, `website_url`, `bio`, `is_seller` (boolean, default false)
+
+### Listing Fields
+`user_id` (nullable, seller), `name`, `slug` (unique), `price` (decimal), `description`, `image_url`, `status` (available/draft/sold), `category`
+
+### All listings default to price = 0 (free)
+When creating new listings via seed or seller dashboard, default price is 0.
+
+### Seeder note
+`ListingSeeder` uses `Listing::query()->delete()` (not `truncate()`) to avoid FK constraint errors with the purchases table.
+
+### Protected API routes (auth:sanctum)
+- `GET /api/purchases` — user's purchase list (with listing)
+- `POST /api/purchases` — acquire free listing (`listing_id`)
+- `GET /api/purchases/check/{listingId}` — check ownership
+- `GET /api/my-listings` — seller's own listings
+- `POST /api/listings` — create listing (seller only)
+- `PUT /api/listings/{id}` — update own listing
+- `DELETE /api/listings/{id}` — delete own listing
+- `PUT /api/profile` — update profile fields
+- `POST /api/become-seller` — set is_seller=true
 
 ## Technology Versions
 
