@@ -166,15 +166,15 @@ export default function SourcingPage() {
 
       <main style={{ flex: 1 }}>
         {/* Hero */}
-        <section style={{ padding: '72px 24px 56px', textAlign: 'center', maxWidth: 800, margin: '0 auto' }}>
-          <div className="claw-label" style={{ margin: '0 auto 20px' }}>CLAWSOURCING</div>
+        <section style={{ padding: '72px 24px 56px', maxWidth: 1200, margin: '0 auto' }}>
+          <div className="claw-label">CLAWSOURCING</div>
           <h1 className="claw-h1" style={{ fontSize: 52 }}>
-            你的下一个员工<br /><span className="claw-accent">不需要工资。</span>
+            你的下一个员工<span className="claw-accent">不需要工资。</span>
           </h1>
-          <p className="claw-lead" style={{ maxWidth: 560, margin: '0 auto 16px' }}>
+          <p className="claw-lead" style={{ margin: '0 0 16px' }}>
             我们为你构建一个托管 AI 员工。它 24/7 工作，成本比人类低 90%，每个月都在变更好——因为我们一直在训练它。
           </p>
-          <p className="claw-body" style={{ maxWidth: 480, margin: '0 auto 32px' }}>
+          <p className="claw-body" style={{ margin: '0 0 32px' }}>
             不是聊天机器人。不是模板。一个为你的业务定制搭建的数字工作者，了解你的业务，使用你的工具，真正完成工作。
           </p>
           <button className="claw-btn-primary" style={{ fontSize: 16, padding: '12px 32px' }} onClick={() => document.getElementById('consult-form')?.scrollIntoView({ behavior: 'smooth' })}>
@@ -187,7 +187,7 @@ export default function SourcingPage() {
 
         {/* Why hasn't it */}
         <section style={{ padding: '48px 24px' }}>
-          <div style={{ maxWidth: 672, margin: '0 auto' }}>
+          <div style={{ maxWidth: 1200, margin: '0 auto' }}>
             <h2 style={{ fontSize: '1.75rem', fontWeight: 700, marginBottom: 20, fontFamily: "'Bricolage Grotesque', sans-serif", color: '#2A1F19' }}>你知道 AI 能做这些事。那为什么它还没做？</h2>
             <p style={{ color: '#6B5549', lineHeight: 1.7, marginBottom: 16 }}>
               因为"AI 能写博客"和"有一个 AI 每天用你的语气写博客、发布到你的 CMS、你完全不用插手"之间，横着一道残酷的鸿沟。
@@ -208,7 +208,7 @@ export default function SourcingPage() {
 
         {/* Comparison table */}
         <section style={{ padding: '48px 24px', background: 'rgba(240, 232, 225, 0.5)' }}>
-          <div style={{ maxWidth: 768, margin: '0 auto' }}>
+          <div style={{ maxWidth: 1200, margin: '0 auto' }}>
             <h2 style={{ fontSize: '1.75rem', fontWeight: 700, marginBottom: 8, fontFamily: "'Bricolage Grotesque', sans-serif", color: '#2A1F19' }}>这笔账，算起来离谱</h2>
             <p style={{ color: '#6B5549', marginBottom: 24 }}>真实对比。没有星号。</p>
             <div style={{ overflowX: 'auto', borderRadius: 12, border: '1px solid rgba(42, 31, 25, 0.1)' }}>
@@ -238,7 +238,7 @@ export default function SourcingPage() {
 
         {/* Unfair part */}
         <section style={{ padding: '48px 24px' }}>
-          <div style={{ maxWidth: 672, margin: '0 auto' }}>
+          <div style={{ maxWidth: 1200, margin: '0 auto' }}>
             <h2 style={{ fontSize: '1.75rem', fontWeight: 700, marginBottom: 20, fontFamily: "'Bricolage Grotesque', sans-serif", color: '#2A1F19' }}>让这一切变得不公平的部分</h2>
             <p style={{ color: '#6B5549', lineHeight: 1.7, marginBottom: 16 }}>
               普通 AI 配置是冻结在时间里的。你配置一次，它做那件事，除非你再投入更多工作，否则它永远不会更好。
@@ -258,7 +258,7 @@ export default function SourcingPage() {
 
         {/* Three options */}
         <section style={{ padding: '48px 24px', background: 'rgba(240, 232, 225, 0.5)' }}>
-          <div style={{ maxWidth: 896, margin: '0 auto' }}>
+          <div style={{ maxWidth: 1200, margin: '0 auto' }}>
             <h2 style={{ fontSize: '1.75rem', fontWeight: 700, textAlign: 'center', marginBottom: 8, fontFamily: "'Bricolage Grotesque', sans-serif", color: '#2A1F19' }}>运行 AI 的三种方式。</h2>
             <p style={{ textAlign: 'center', color: '#6B5549', marginBottom: 32 }}>只有一种你真正想要。</p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 24 }}>
@@ -299,7 +299,7 @@ export default function SourcingPage() {
 
         {/* What you get */}
         <section style={{ padding: '48px 24px' }}>
-          <div style={{ maxWidth: 768, margin: '0 auto' }}>
+          <div style={{ maxWidth: 1200, margin: '0 auto' }}>
             <h2 style={{ fontSize: '1.75rem', fontWeight: 700, marginBottom: 8, fontFamily: "'Bricolage Grotesque', sans-serif", color: '#2A1F19' }}>你得到的，普通安装没有的</h2>
             <p style={{ color: '#6B5549', marginBottom: 32 }}>每个 Clawsourced AI 员工都搭载了我们在数十次部署中构建和打磨的系统。这不是默认配置——这是生产级基础。</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
@@ -320,7 +320,7 @@ export default function SourcingPage() {
 
         {/* Security */}
         <section style={{ padding: '48px 24px', background: 'rgba(240, 232, 225, 0.5)' }}>
-          <div style={{ maxWidth: 768, margin: '0 auto' }}>
+          <div style={{ maxWidth: 1200, margin: '0 auto' }}>
             <h2 style={{ fontSize: '1.75rem', fontWeight: 700, marginBottom: 8, fontFamily: "'Bricolage Grotesque', sans-serif", color: '#2A1F19' }}>从第一天起内置安全</h2>
             <p style={{ color: '#6B5549', marginBottom: 32 }}>你的 Claw 处理真实业务数据——邮件、客户信息、内部文档。我们以应有的严肃态度对待这些。</p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20 }}>
@@ -344,7 +344,7 @@ export default function SourcingPage() {
 
         {/* Claw types */}
         <section style={{ padding: '48px 24px' }}>
-          <div style={{ maxWidth: 896, margin: '0 auto' }}>
+          <div style={{ maxWidth: 1200, margin: '0 auto' }}>
             <h2 style={{ fontSize: '1.75rem', fontWeight: 700, textAlign: 'center', marginBottom: 32, fontFamily: "'Bricolage Grotesque', sans-serif", color: '#2A1F19' }}>你想雇用谁？</h2>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 20 }}>
               {clawTypes.map((c, i) => (
@@ -373,7 +373,7 @@ export default function SourcingPage() {
 
         {/* Steps */}
         <section style={{ padding: '48px 24px', background: 'rgba(240, 232, 225, 0.5)' }}>
-          <div style={{ maxWidth: 672, margin: '0 auto' }}>
+          <div style={{ maxWidth: 1200, margin: '0 auto' }}>
             <h2 style={{ fontSize: '1.75rem', fontWeight: 700, textAlign: 'center', marginBottom: 32, fontFamily: "'Bricolage Grotesque', sans-serif", color: '#2A1F19' }}>从提交到上岗，只需几天</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
               {steps.map((s, i) => (
@@ -393,7 +393,7 @@ export default function SourcingPage() {
 
         {/* Form */}
         <section id="consult-form" style={{ padding: '48px 24px' }}>
-          <div style={{ maxWidth: 576, margin: '0 auto' }}>
+          <div style={{ maxWidth: 1200, margin: '0 auto' }}>
             <p style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#9e8074', textAlign: 'center', marginBottom: 8 }}>从这里开始</p>
             <h2 style={{ fontSize: '1.75rem', fontWeight: 700, textAlign: 'center', marginBottom: 8, fontFamily: "'Bricolage Grotesque', sans-serif", color: '#2A1F19' }}>免费咨询</h2>
             <p style={{ color: '#6B5549', textAlign: 'center', fontSize: 14, marginBottom: 32 }}>告诉我们你想自动化的岗位，我们会在 24 小时内跟进调研问题和范围计划。无需付款，无需承诺。</p>
@@ -469,7 +469,7 @@ export default function SourcingPage() {
 
         {/* FAQ */}
         <section style={{ padding: '48px 24px', background: 'rgba(240, 232, 225, 0.5)' }}>
-          <div style={{ maxWidth: 672, margin: '0 auto' }}>
+          <div style={{ maxWidth: 1200, margin: '0 auto' }}>
             <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: 24, fontFamily: "'Bricolage Grotesque', sans-serif", color: '#2A1F19' }}>常见问题</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               {faqs.map((faq, i) => (

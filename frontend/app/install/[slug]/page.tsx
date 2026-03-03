@@ -74,7 +74,7 @@ export default function InstallPage({ params }: { params: Promise<{ slug: string
       <div className="claw-page">
         <ClawNav />
 
-        <main style={{ maxWidth: 860, margin: '0 auto', padding: '48px 24px 96px' }}>
+        <main style={{ maxWidth: 1200, margin: '0 auto', padding: '48px 24px 96px' }}>
           {/* Back */}
           <Link href="/dashboard?tab=purchases" className="install-back">
             <ChevronLeft size={15} /> 返回我的购买

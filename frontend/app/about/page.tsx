@@ -7,15 +7,22 @@ import { ClawNav, ClawFooter, clawStyles } from "@/components/claw-layout";
 export default function AboutPage() {
   return (
     <>
-      <style>{clawStyles}</style>
+      <style>{clawStyles + `
+        .about-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 32px; }
+        .about-three-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 32px 0; }
+        @media (max-width: 640px) {
+          .about-two-col { grid-template-columns: 1fr; }
+          .about-three-col { grid-template-columns: 1fr; gap: 16px; }
+        }
+      `}</style>
       <div className="claw-page">
         <ClawNav />
 
         <main>
           {/* Hero */}
-          <section style={{ padding: '72px 24px 56px', maxWidth: 800, margin: '0 auto' }}>
+          <section style={{ padding: '72px 24px 56px', maxWidth: 1200, margin: '0 auto' }}>
             <div className="claw-label">关于 CLAW MART</div>
-            <h1 className="claw-h1">AI 助手的<br /><span className="claw-accent">应用商店</span></h1>
+            <h1 className="claw-h1">OpenClaw<br /><span className="claw-accent">机器人员工交付中心</span></h1>
             <p className="claw-lead">
               大多数人把 AI 助手配置好之后就再也不碰了。结果是：千篇一律的回答、没有记忆、与工作流毫无整合。AI 能做到的事，和大多数人实际让它做到的事，之间存在巨大鸿沟。
             </p>
@@ -27,9 +34,9 @@ export default function AboutPage() {
           <hr className="claw-divider" />
 
           {/* Two product types */}
-          <section style={{ padding: '56px 24px', maxWidth: 900, margin: '0 auto' }}>
+          <section style={{ padding: '56px 24px', maxWidth: 1200, margin: '0 auto' }}>
             <h2 className="claw-h2">两种产品类型</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginTop: 32 }}>
+            <div className="about-two-col">
               {[
                 {
                   emoji: '🧑‍💼',
@@ -57,7 +64,7 @@ export default function AboutPage() {
           <hr className="claw-divider" />
 
           {/* How it works */}
-          <section style={{ padding: '56px 24px', maxWidth: 700, margin: '0 auto' }} className="claw-muted-section">
+          <section style={{ padding: '56px 24px', maxWidth: 1200, margin: '0 auto' }} className="claw-muted-section">
             <h2 className="claw-h2">使用流程</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 28, marginTop: 32 }}>
               {[
@@ -79,12 +86,12 @@ export default function AboutPage() {
           <hr className="claw-divider" />
 
           {/* For creators */}
-          <section style={{ padding: '56px 24px', maxWidth: 700, margin: '0 auto' }}>
+          <section style={{ padding: '56px 24px', maxWidth: 1200, margin: '0 auto' }}>
             <h2 className="claw-h2">面向创作者</h2>
             <p className="claw-body">
               如果你构建了一套真正有效的 AI 工作流——一个处理邮件的人设、一个自动化部署的技能、一个实际能规模化的记忆系统——你可以把它打包，在 Claw Mart 上出售。
             </p>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24, margin: '32px 0' }}>
+            <div className="about-three-col">
               {[
                 { stat: '90%', desc: '收益归你所有，扣除支付处理费' },
                 { stat: 'API 优先', desc: '从终端发布，或让你的 AI 来做' },
@@ -105,7 +112,7 @@ export default function AboutPage() {
           <hr className="claw-divider" />
 
           {/* Why this exists */}
-          <section style={{ padding: '56px 24px', maxWidth: 700, margin: '0 auto' }} className="claw-muted-section">
+          <section style={{ padding: '56px 24px', maxWidth: 1200, margin: '0 auto' }} className="claw-muted-section">
             <h2 className="claw-h2">为什么我们存在</h2>
             <p className="claw-body">
               AI 助手的好坏，完全取决于它的配置。一个泛泛而谈的聊天机器人和一个真正的效率倍增器之间的差距，在于搭建它所投入的提示词工程、记忆架构、工具集成和工作流设计。

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
@@ -23,6 +23,14 @@ const H2 = ({ children }: { children: React.ReactNode }) => (
 );
 
 export default function DashboardPage() {
+  return (
+    <Suspense>
+      <DashboardContent />
+    </Suspense>
+  );
+}
+
+function DashboardContent() {
   const { user, token, isAuthenticated, loading, updateProfile, becomeSeller } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -98,10 +106,10 @@ export default function DashboardPage() {
   const isSeller = user.is_seller || sellerDone;
 
   const TABS: { key: Tab; label: string; icon: React.ReactNode; sellerOnly?: boolean }[] = [
-    { key: 'overview', label: 'Dashboard', icon: <LayoutDashboard size={16} /> },
-    { key: 'purchases', label: '我的购买', icon: <ShoppingBag size={16} /> },
-    { key: 'my-listings', label: '我的销售', icon: <Package size={16} />, sellerOnly: true },
-    { key: 'settings', label: '我的设置', icon: <Settings size={16} /> },
+    { key: 'overview' as Tab, label: 'Dashboard', icon: <LayoutDashboard size={16} /> },
+    { key: 'purchases' as Tab, label: '我的购买', icon: <ShoppingBag size={16} /> },
+    { key: 'my-listings' as Tab, label: '我的销售', icon: <Package size={16} />, sellerOnly: true },
+    { key: 'settings' as Tab, label: '我的设置', icon: <Settings size={16} /> },
     ...(!isSeller ? [{ key: 'sell' as Tab, label: 'Start Selling', icon: <Store size={16} /> }] : []),
   ].filter(t => !t.sellerOnly || isSeller);
 
@@ -110,7 +118,7 @@ export default function DashboardPage() {
       <style>{clawStyles + dashStyles}</style>
       <div className="claw-page">
         <ClawNav />
-        <main style={{ maxWidth: 1000, margin: '0 auto', padding: '40px 24px 80px' }}>
+        <main style={{ maxWidth: 1200, margin: '0 auto', padding: '40px 24px 80px' }}>
           <div style={{ marginBottom: 32 }}>
             <div className="claw-label">用户中心</div>
             <h1 style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 32, fontWeight: 800, color: '#2A1F19', margin: '0 0 6px', letterSpacing: '-0.02em' }}>
@@ -190,7 +198,7 @@ function OverviewTab({ user, isSeller, setTab, token }: { user: any; isSeller: b
   return (
     <div>
       <H2>概览</H2>
-      <div style={{ display: 'grid', gridTemplateColumns: `repeat(${isSeller ? 4 : 3}, 1fr)`, gap: 16, marginBottom: 28 }}>
+      <div className="dash-stats-grid" style={{ display: 'grid', gridTemplateColumns: `repeat(${isSeller ? 4 : 3}, 1fr)`, gap: 16, marginBottom: 28 }}>
         {stats.map((s, i) => (
           <div key={i} className="claw-card" style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: 20 }}>
             {s.icon}
@@ -470,7 +478,7 @@ function ListingFormModal({ token, editing, onClose, onSaved }: {
             <input className="claw-input" value={name} onChange={e => setName(e.target.value)} placeholder="例：营销文案专家 v2" required />
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          <div className="dash-form-two-col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
             <div>
               <label className="claw-form-label"><DollarSign size={13} style={{ display: 'inline', marginRight: 5 }} />价格（¥）*</label>
               <input className="claw-input" type="number" min="0" step="0.01" value={price} onChange={e => setPrice(e.target.value)} placeholder="0 = 免费" required />
@@ -665,7 +673,32 @@ const dashStyles = `
   }
   @keyframes spin { to { transform: rotate(360deg); } }
   @media (max-width: 640px) {
-    .dash-layout { grid-template-columns: 1fr; }
-    .dash-sidebar { position: static; }
+    .dash-layout { grid-template-columns: 1fr; gap: 0; }
+    .dash-sidebar {
+      position: static;
+      display: flex;
+      flex-direction: row;
+      overflow-x: auto;
+      gap: 4px;
+      padding: 8px 0 12px;
+      border-bottom: 1px solid rgba(42,31,25,0.08);
+      scrollbar-width: none;
+    }
+    .dash-sidebar::-webkit-scrollbar { display: none; }
+    .dash-tab-btn {
+      white-space: nowrap;
+      flex-shrink: 0;
+      padding: 8px 14px;
+      border-radius: 100px;
+      font-size: 13px;
+    }
+    .dash-tab-btn.active {
+      background: #2A1F19;
+      color: white;
+    }
+  }
+  @media (max-width: 480px) {
+    .dash-stats-grid { grid-template-columns: 1fr 1fr !important; }
+    .dash-form-two-col { grid-template-columns: 1fr !important; }
   }
 `;

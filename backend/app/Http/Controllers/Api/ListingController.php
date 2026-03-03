@@ -50,10 +50,29 @@ class ListingController extends Controller
     public function show(string $slug)
     {
         $listing = Listing::query()
+            ->with('user:id,name,avatar_url,bio,website_url')
             ->where('slug', $slug)
             ->firstOrFail();
 
         return response()->json($listing);
+    }
+
+    /**
+     * Public: related listings in same category.
+     */
+    public function related(string $slug)
+    {
+        $listing = Listing::query()->where('slug', $slug)->firstOrFail();
+
+        $related = Listing::query()
+            ->where('status', 'available')
+            ->where('category', $listing->category)
+            ->where('id', '!=', $listing->id)
+            ->orderBy('created_at', 'desc')
+            ->limit(3)
+            ->get();
+
+        return response()->json($related);
     }
 
     /**

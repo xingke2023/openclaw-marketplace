@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { listingsApi, Listing, ListingParams } from "@/lib/api";
@@ -84,6 +84,14 @@ function SkeletonGrid({ count = 6 }: { count?: number }) {
 }
 
 export default function Home() {
+  return (
+    <Suspense>
+      <HomeContent />
+    </Suspense>
+  );
+}
+
+function HomeContent() {
   const searchParams = useSearchParams();
   const [search, setSearch] = useState(searchParams.get('search') || "");
   const [category, setCategory] = useState("all");
@@ -501,7 +509,9 @@ export default function Home() {
               OpenClaw<span>机器人</span>员工市场
             </h1>
             <p className="claw-hero-subtitle">
-              无需进行繁琐的工程设计。直接使用我们经过操作员测试、可实际部署的 OpenClaw AI 员工——包含操作手册、工具设置和分步指南。
+              我们的OpenClaw机器人，不仅仅是聊天机器人，是一个为你的业务定制搭建的数字工作者，了解你的业务，真正完成工作。<br />
+              我们为你构建一个托管 AI 员工。它 24/7 工作，成本比人类低 90%，每个月都在变更好——因为我们一直在训练它。<br />
+              您无需进行繁琐的工程设计，您只需使用您的手机即可直接使用我们的OpenClaw员工。
             </p>
           </div>
         </div>

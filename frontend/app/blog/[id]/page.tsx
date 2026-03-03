@@ -7,10 +7,10 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth-context";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { ArrowLeft, Copy, Check } from "lucide-react";
+import { ClawNav, ClawFooter, clawStyles } from "@/components/claw-layout";
 
 export default function BlogPostPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
-  const { isAuthenticated, user, logout } = useAuth();
   const [post, setPost] = useState<Post | null>(null);
   const [relatedPosts, setRelatedPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
@@ -65,35 +65,14 @@ export default function BlogPostPage({ params }: { params: Promise<{ id: string 
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-background text-foreground">
-      {/* Header */}
-      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container mx-auto flex h-14 items-center justify-between px-4">
-          <Link href="/" className="text-base font-semibold tracking-tight">
-            Claw Mart
-          </Link>
-          <nav className="flex items-center gap-6 text-sm">
-            <Link href="/" className="text-muted-foreground hover:text-foreground transition-colors">Browse</Link>
-            <Link href="/about" className="text-muted-foreground hover:text-foreground transition-colors">About</Link>
-            <Link href="/blog" className="text-foreground font-medium transition-colors">Blog</Link>
-            <Link href="/sourcing" className="text-muted-foreground hover:text-foreground transition-colors">Clawsourcing</Link>
-            {isAuthenticated ? (
-              <Button onClick={logout} variant="outline" size="sm" className="rounded-full">
-                {user?.name}
-              </Button>
-            ) : (
-              <Link href="/login">
-                <Button variant="outline" size="sm" className="rounded-full px-4">Login / Sign Up</Button>
-              </Link>
-            )}
-            <ThemeToggle />
-          </nav>
-        </div>
-      </header>
+    <>
+      <style>{clawStyles}</style>
+      <div className="flex min-h-screen flex-col bg-background text-foreground">
+        <ClawNav />
 
       {/* Main Content */}
       <main className="flex-1">
-        <div className="container mx-auto px-4 py-12 max-w-3xl">
+        <div className="container mx-auto px-4 py-12" style={{ maxWidth: 1200 }}>
           {loading ? (
             <div className="animate-pulse">
               <div className="h-4 bg-muted rounded w-1/4 mb-8" />
@@ -211,22 +190,8 @@ export default function BlogPostPage({ params }: { params: Promise<{ id: string 
         )}
       </main>
 
-      {/* Footer */}
-      <footer className="border-t py-20 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
-            <div className="flex flex-wrap justify-center gap-8 text-sm font-medium text-muted-foreground">
-              <Link href="/about" className="hover:text-foreground transition-colors">About</Link>
-              <Link href="/creators" className="hover:text-foreground transition-colors">Creators</Link>
-              <Link href="/support" className="hover:text-foreground transition-colors">Support</Link>
-              <Link href="/terms" className="hover:text-foreground transition-colors">Terms</Link>
-            </div>
-            <div className="text-sm text-muted-foreground font-medium">
-              © 2026 CLAW MART
-            </div>
-          </div>
-        </div>
-      </footer>
-    </div>
+        <ClawFooter />
+      </div>
+    </>
   );
 }

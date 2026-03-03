@@ -67,6 +67,13 @@ export interface Listing {
   category: string;
   created_at: string;
   updated_at: string;
+  user?: {
+    id: number;
+    name: string;
+    avatar_url: string | null;
+    bio: string | null;
+    website_url: string | null;
+  };
 }
 
 export interface Purchase {

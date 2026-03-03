@@ -26,8 +26,11 @@ export const listingsApi = {
     return apiClient.get<PaginatedResponse<Listing>>(url);
   },
   
-  getListing: (slug: string) => 
+  getListing: (slug: string) =>
     apiClient.get<Listing>(`/listings/${slug}`),
+
+  getRelatedListings: (slug: string) =>
+    apiClient.get<Listing[]>(`/listings/${slug}/related`),
 
   submitSourcing: (data: SourcingData) =>
     apiClient.post<{ message: string; data: any }>('/sourcing', data),
@@ -54,4 +57,7 @@ export const listingsApi = {
 
   checkPurchased: (listingId: number, token: string) =>
     apiClient.get<{ owned: boolean }>(`/purchases/check/${listingId}`, token),
+
+  createCheckoutSession: (listingId: number, token: string) =>
+    apiClient.post<{ url: string; session_id: string }>('/stripe/checkout', { listing_id: listingId }, token),
 };

@@ -4,13 +4,13 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
-import { LayoutDashboard, ShoppingBag, Settings, LogOut, Store, ChevronDown, Search } from "lucide-react";
+import { LayoutDashboard, ShoppingBag, Settings, LogOut, Store, ChevronDown, Search, Menu, X } from "lucide-react";
 
 const NAV_LINKS = [
-  { label: "浏览", href: "/" },
+  { label: "市场", href: "/" },
+  { label: "前沿", href: "/blog" },
   { label: "关于", href: "/about" },
-  { label: "博客", href: "/blog" },
-  { label: "众包需求", href: "/sourcing" },
+  { label: "定制", href: "/sourcing" },
 ];
 
 export function ClawNav() {
@@ -18,6 +18,7 @@ export function ClawNav() {
   const pathname = usePathname();
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const [navSearch, setNavSearch] = useState("");
   const dropRef = useRef<HTMLDivElement>(null);
 
@@ -25,6 +26,7 @@ export function ClawNav() {
     e.preventDefault();
     if (navSearch.trim()) {
       router.push(`/?search=${encodeURIComponent(navSearch.trim())}`);
+      setMobileOpen(false);
     }
   };
 
@@ -37,6 +39,9 @@ export function ClawNav() {
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
   }, []);
+
+  // Close mobile menu on route change
+  useEffect(() => { setMobileOpen(false); }, [pathname]);
 
   const avatarLetter = user?.name?.[0]?.toUpperCase() || '?';
 
@@ -128,7 +133,60 @@ export function ClawNav() {
           transition: border-color 0.15s;
         }
         .claw-nav-avatar-btn:hover { border-color: rgba(42,31,25,0.3); }
+
+        /* Mobile nav */
+        .claw-nav-desktop { display: flex; align-items: center; gap: 20px; }
+        .claw-nav-hamburger { display: none; background: none; border: none; cursor: pointer; padding: 6px; color: #2A1F19; }
+        .claw-mobile-menu {
+          display: none;
+          position: fixed;
+          top: 60px;
+          left: 0; right: 0;
+          background: rgba(248,242,237,0.98);
+          backdrop-filter: blur(16px);
+          border-bottom: 1px solid rgba(42,31,25,0.1);
+          z-index: 49;
+          padding: 16px 20px 24px;
+          flex-direction: column;
+          gap: 4px;
+          box-shadow: 0 8px 24px rgba(42,31,25,0.1);
+        }
+        .claw-mobile-menu.open { display: flex; }
+        .claw-mobile-nav-link {
+          display: block;
+          padding: 12px 4px;
+          font-size: 16px;
+          font-weight: 600;
+          color: #2A1F19;
+          text-decoration: none;
+          font-family: 'Manrope', sans-serif;
+          border-bottom: 1px solid rgba(42,31,25,0.07);
+        }
+        .claw-mobile-nav-link:last-of-type { border-bottom: none; }
+        .claw-mobile-search {
+          display: flex;
+          align-items: center;
+          background: rgba(42,31,25,0.07);
+          border-radius: 8px;
+          padding: 0 12px;
+          gap: 8px;
+          height: 42px;
+          margin-top: 8px;
+          margin-bottom: 4px;
+        }
+        .claw-mobile-search:focus-within { background: white; box-shadow: 0 0 0 1.5px #E65C46; }
+        .claw-mobile-search input {
+          border: none; background: transparent;
+          font-family: 'Manrope', sans-serif;
+          font-size: 14px; color: #2A1F19; outline: none; flex: 1;
+        }
+        .claw-mobile-search input::placeholder { color: #9e8074; }
+        @media (max-width: 768px) {
+          .claw-nav-desktop { display: none; }
+          .claw-nav-hamburger { display: flex; align-items: center; justify-content: center; }
+        }
       `}</style>
+
       <nav style={{
         position: 'sticky',
         top: 0,
@@ -140,7 +198,7 @@ export function ClawNav() {
         <div style={{
           maxWidth: 1200,
           margin: '0 auto',
-          padding: '0 24px',
+          padding: '0 20px',
           height: 60,
           display: 'flex',
           alignItems: 'center',
@@ -160,7 +218,8 @@ export function ClawNav() {
             CLAW MART
           </Link>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+          {/* Desktop nav */}
+          <div className="claw-nav-desktop">
             {NAV_LINKS.map(link => (
               <Link
                 key={link.href}
@@ -277,8 +336,56 @@ export function ClawNav() {
               </Link>
             )}
           </div>
+
+          {/* Hamburger (mobile only) */}
+          <button className="claw-nav-hamburger" onClick={() => setMobileOpen(v => !v)} aria-label="菜单">
+            {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
         </div>
       </nav>
+
+      {/* Mobile drawer */}
+      <div className={`claw-mobile-menu${mobileOpen ? ' open' : ''}`}>
+        <form onSubmit={handleNavSearch} className="claw-mobile-search">
+          <Search size={15} style={{ color: '#9e8074', flexShrink: 0 }} />
+          <input
+            type="text"
+            placeholder="搜索技能..."
+            value={navSearch}
+            onChange={e => setNavSearch(e.target.value)}
+          />
+        </form>
+        {NAV_LINKS.map(link => (
+          <Link key={link.href} href={link.href} className="claw-mobile-nav-link" onClick={() => setMobileOpen(false)}>
+            {link.label}
+          </Link>
+        ))}
+        <div style={{ marginTop: 12, borderTop: '1px solid rgba(42,31,25,0.08)', paddingTop: 12 }}>
+          {isAuthenticated ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+              <Link href="/dashboard" className="claw-mobile-nav-link" onClick={() => setMobileOpen(false)}>Dashboard</Link>
+              <Link href="/dashboard?tab=purchases" className="claw-mobile-nav-link" onClick={() => setMobileOpen(false)}>我的购买</Link>
+              <Link href="/dashboard?tab=settings" className="claw-mobile-nav-link" onClick={() => setMobileOpen(false)}>我的设置</Link>
+              <button
+                onClick={() => { setMobileOpen(false); logout(); }}
+                style={{ background: 'none', border: 'none', textAlign: 'left', padding: '12px 4px', fontSize: 16, fontWeight: 600, color: '#bf3f30', fontFamily: "'Manrope', sans-serif", cursor: 'pointer' }}
+              >
+                退出登录
+              </button>
+            </div>
+          ) : (
+            <Link href="/login" onClick={() => setMobileOpen(false)} style={{
+              display: 'block', textAlign: 'center',
+              background: '#E65C46', color: 'white',
+              padding: '12px 24px', borderRadius: 8,
+              fontWeight: 600, fontSize: 15, textDecoration: 'none',
+              fontFamily: "'Manrope', sans-serif",
+            }}>
+              登录 / 注册
+            </Link>
+          )}
+        </div>
+      </div>
     </>
   );
 }
@@ -291,13 +398,33 @@ export function ClawFooter() {
       background: '#F0E8E1',
       fontFamily: "'Manrope', sans-serif",
     }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '48px 24px 28px' }}>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '2fr 1fr 1fr 1fr',
-          gap: 48,
-          marginBottom: 40,
-        }}>
+      <style>{`
+        .claw-footer-grid {
+          display: grid;
+          grid-template-columns: 2fr 1fr 1fr 1fr;
+          gap: 48px;
+          margin-bottom: 40px;
+        }
+        .claw-footer-bottom {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding-top: 20px;
+          border-top: 1px solid rgba(42,31,25,0.1);
+          font-size: 13px;
+          color: #9e8074;
+          font-weight: 500;
+        }
+        @media (max-width: 768px) {
+          .claw-footer-grid { grid-template-columns: 1fr 1fr; gap: 28px; }
+          .claw-footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+        }
+        @media (max-width: 480px) {
+          .claw-footer-grid { grid-template-columns: 1fr; gap: 20px; }
+        }
+      `}</style>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '48px 20px 28px' }}>
+        <div className="claw-footer-grid">
           <div>
             <div style={{
               fontFamily: "'Bricolage Grotesque', sans-serif",
@@ -318,8 +445,8 @@ export function ClawFooter() {
           </div>
           {[
             { title: '平台', links: [{ label: '浏览智能体', href: '/' }, { label: '定制众包', href: '/sourcing' }, { label: '技术博客', href: '/blog' }] },
-            { title: '关于', links: [{ label: '关于我们', href: '/about' }, { label: '创作者计划', href: '#' }, { label: '帮助中心', href: '#' }] },
-            { title: '法律', links: [{ label: '使用条款', href: '#' }, { label: '隐私政策', href: '#' }] },
+            { title: '关于', links: [{ label: '关于我们', href: '/company' }, { label: '创作者计划', href: '#' }, { label: '帮助中心', href: '/help' }] },
+            { title: '法律', links: [{ label: '使用条款', href: '/terms' }, { label: '隐私政策', href: '/privacy' }] },
           ].map(col => (
             <div key={col.title}>
               <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: '#9e8074', marginBottom: 16 }}>
@@ -337,16 +464,7 @@ export function ClawFooter() {
             </div>
           ))}
         </div>
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          paddingTop: 20,
-          borderTop: '1px solid rgba(42, 31, 25, 0.1)',
-          fontSize: 13,
-          color: '#9e8074',
-          fontWeight: 500,
-        }}>
+        <div className="claw-footer-bottom">
           <span>© 2026 CLAW MART · An OpenClaw Project</span>
           <div style={{ display: 'flex', gap: 20 }}>
             {['Twitter', 'Discord', 'GitHub'].map(s => (
@@ -371,10 +489,10 @@ export const clawStyles = `
   .claw-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 24px;
+    padding: 0 20px;
   }
   .claw-section {
-    padding: 56px 24px;
+    padding: 56px 20px;
     max-width: 1200px;
     margin: 0 auto;
   }
@@ -639,5 +757,19 @@ export const clawStyles = `
   @keyframes claw-shimmer {
     0% { background-position: 200% 0; }
     100% { background-position: -200% 0; }
+  }
+
+  /* Global responsive */
+  @media (max-width: 768px) {
+    .claw-h1 { font-size: 32px; }
+    .claw-h2 { font-size: 24px; }
+    .claw-lead { font-size: 15px; }
+    .claw-section { padding: 40px 16px; }
+    .claw-section-title { font-size: 22px; }
+  }
+  @media (max-width: 480px) {
+    .claw-h1 { font-size: 26px; }
+    .claw-h2 { font-size: 20px; }
+    .claw-section { padding: 32px 16px; }
   }
 `;

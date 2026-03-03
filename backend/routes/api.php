@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\ListingController;
 use App\Http\Controllers\Api\PurchaseController;
 use App\Http\Controllers\Api\SourcingRequestController;
+use App\Http\Controllers\Api\StripeController;
 use Illuminate\Support\Facades\Route;
 
 // Public routes
@@ -14,9 +15,13 @@ Route::post('/login', [AuthController::class, 'login']);
 // Listing routes (public)
 Route::get('/listings', [ListingController::class, 'index']);
 Route::get('/listings/{slug}', [ListingController::class, 'show']);
+Route::get('/listings/{slug}/related', [ListingController::class, 'related']);
 
 // Sourcing routes
 Route::post('/sourcing', [SourcingRequestController::class, 'store']);
+
+// Stripe webhook (public, no auth)
+Route::post('/stripe/webhook', [StripeController::class, 'webhook']);
 
 
 // Protected routes
@@ -30,6 +35,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/purchases', [PurchaseController::class, 'index']);
     Route::post('/purchases', [PurchaseController::class, 'store']);
     Route::get('/purchases/check/{listingId}', [PurchaseController::class, 'check']);
+
+    // Stripe checkout
+    Route::post('/stripe/checkout', [StripeController::class, 'createCheckoutSession']);
 
     // Seller listing management
     Route::get('/my-listings', [ListingController::class, 'myListings']);
