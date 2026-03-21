@@ -1,15 +1,17 @@
 'use client';
 
-import { useEffect, useState, useCallback, Suspense } from "react";
+import { useEffect, useState, useCallback, useRef, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { listingsApi, Listing, ListingParams } from "@/lib/api";
+import { listingsApi, Listing, ListingParams, DemoMessage } from "@/lib/api";
 import { Star, Download, Loader2 } from "lucide-react";
 import { ClawNav, ClawFooter } from "@/components/claw-layout";
 
-const CATEGORIES = [
-  { label: "全部", value: "all" },
-  { label: "🦞 AI员工", value: "AI 角色" },
+const CATEGORIES_PERSONAS = [
+  { label: "现有岗位员工", value: "AI 角色" },
+];
+
+const CATEGORIES_SKILLS = [
   { label: "营销", value: "营销" },
   { label: "工程", value: "工程" },
   { label: "设计", value: "设计" },
@@ -23,26 +25,39 @@ const SORT_OPTIONS = [
   { label: "价格：从高到低", value: "price_desc" },
 ];
 
-function ListingCard({ listing }: { listing: Listing }) {
+function ListingCard({ listing, onDemo }: { listing: Listing; onDemo?: (messages: DemoMessage[], name: string, avatarUrl: string) => void }) {
+  const hasDemo = !!(listing.demo_messages && listing.demo_messages.length > 0);
+  const avatarUrl = listing.category === 'AI 角色'
+    ? `https://api.dicebear.com/9.x/open-peeps/svg?seed=${listing.id}&size=48&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`
+    : `https://api.dicebear.com/9.x/${['shapes','icons','identicon','rings','bottts','pixel-art','fun-emoji'][listing.id % 7]}/svg?seed=${listing.id}&size=48&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`;
   return (
     <Link href={`/listings/${listing.slug}`} className="claw-card">
       <div className="claw-card-body">
-        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8, marginBottom: 8 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 8 }}>
           <img
-            src={(() => {
-              if (listing.category === 'AI 角色') {
-                return `https://api.dicebear.com/9.x/open-peeps/svg?seed=${listing.id}&size=48&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`;
-              }
-              const styles = ['shapes', 'icons', 'identicon', 'rings', 'bottts', 'pixel-art', 'fun-emoji'];
-              const style = styles[listing.id % styles.length];
-              return `https://api.dicebear.com/9.x/${style}/svg?seed=${listing.id}&size=48&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`;
-            })()}
+            src={avatarUrl}
             alt=""
             width={48}
             height={48}
-            style={{ borderRadius: 10, background: '#F0E8E1' }}
+            style={{ borderRadius: 10, background: '#F0E8E1', flexShrink: 0 }}
           />
-          <span className="claw-card-badge" style={{ position: 'static', display: 'inline-block', flexShrink: 0 }}>{listing.category}</span>
+          {hasDemo && onDemo ? (
+            <button
+              onClick={e => { e.preventDefault(); e.stopPropagation(); onDemo(listing.demo_messages!, listing.name, avatarUrl); }}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: 5,
+                padding: '5px 14px', borderRadius: 999,
+                background: '#E65C46', color: '#fff',
+                border: 'none', cursor: 'pointer',
+                fontSize: 12, fontWeight: 700,
+                fontFamily: "'Manrope', sans-serif",
+                boxShadow: '0 2px 8px rgba(230,92,70,0.35)',
+                whiteSpace: 'nowrap', marginLeft: 'auto',
+              }}
+            >
+              ▶ 查看演示
+            </button>
+          ) : null}
         </div>
         <div className="claw-card-title">{listing.name}</div>
         <p className="claw-card-desc">{listing.description}</p>
@@ -56,6 +71,7 @@ function ListingCard({ listing }: { listing: Listing }) {
               <Download size={11} />
               {Math.floor(Math.random() * 50 + 5)}k
             </span>
+            <span className="claw-card-badge" style={{ position: 'static', display: 'inline-block', flexShrink: 0 }}>{listing.category}</span>
           </div>
           <span className={`claw-card-price${parseFloat(listing.price) === 0 ? ' free' : ''}`}>
             {parseFloat(listing.price) === 0 ? '免费' : `¥${listing.price}`}
@@ -95,7 +111,52 @@ function HomeContent() {
   const searchParams = useSearchParams();
   const [search, setSearch] = useState(searchParams.get('search') || "");
   const [category, setCategory] = useState("all");
+  const [skillSubCategory, setSkillSubCategory] = useState("all");
   const [sort, setSort] = useState("popular");
+  const [showDemo, setShowDemo] = useState(false);
+  const [currentDemoMsgs, setCurrentDemoMsgs] = useState<DemoMessage[]>([]);
+  const [currentDemoName, setCurrentDemoName] = useState('');
+  const [currentDemoAvatar, setCurrentDemoAvatar] = useState('');
+  const [visibleMsgs, setVisibleMsgs] = useState<number[]>([]);
+  const [showTyping, setShowTyping] = useState(false);
+  const demoTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const msgsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (msgsRef.current) {
+      msgsRef.current.scrollTop = msgsRef.current.scrollHeight;
+    }
+  }, [visibleMsgs, showTyping]);
+
+  const openDemo = useCallback((messages: DemoMessage[], name: string, avatarUrl: string) => {
+    setCurrentDemoMsgs(messages);
+    setCurrentDemoName(name);
+    setCurrentDemoAvatar(avatarUrl);
+    setShowDemo(true);
+    setVisibleMsgs([]);
+    setShowTyping(false);
+    demoTimers.current.forEach(clearTimeout);
+    demoTimers.current = [];
+    let delay = 400;
+    messages.forEach((msg, i) => {
+      if (i > 0) {
+        const t1 = setTimeout(() => setShowTyping(true), delay);
+        demoTimers.current.push(t1);
+        delay += msg.type === 'ai' ? 1400 : 700;
+      }
+      const t2 = setTimeout(() => {
+        setShowTyping(false);
+        setVisibleMsgs(prev => [...prev, i]);
+      }, delay);
+      demoTimers.current.push(t2);
+      delay += msg.type === 'ai' ? 2200 : 1000;
+    });
+  }, []);
+
+  const closeDemo = useCallback(() => {
+    setShowDemo(false);
+    demoTimers.current.forEach(clearTimeout);
+  }, []);
 
   // Personas section (AI 角色)
   const [personas, setPersonas] = useState<Listing[]>([]);
@@ -110,7 +171,8 @@ function HomeContent() {
   const [skillsHasMore, setSkillsHasMore] = useState(false);
 
   // When filtering by a specific category, show unified list
-  const isFiltered = category !== 'all' || search;
+  // isFiltered: use unified filtered view only for specific AI 角色 or search
+  const isFiltered = (category !== 'all' && category !== 'skills') || !!search;
 
   const [filtered, setFiltered] = useState<Listing[]>([]);
   const [filteredLoading, setFilteredLoading] = useState(false);
@@ -236,7 +298,292 @@ function HomeContent() {
           color: #6B5549;
           line-height: 1.65;
           margin: 0;
-          font-weight: 400;
+          font-weight: 500;
+        }
+        .claw-hero-actions {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          margin-top: 28px;
+          flex-wrap: wrap;
+        }
+        .claw-demo-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 10px 20px;
+          border-radius: 999px;
+          border: 2px solid #E65C46;
+          background: transparent;
+          color: #E65C46;
+          font-size: 15px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: background 0.18s, color 0.18s;
+          font-family: 'Manrope', sans-serif;
+        }
+        .claw-demo-btn:hover {
+          background: #E65C46;
+          color: #fff;
+        }
+        /* Demo modal */
+        .claw-demo-overlay {
+          position: fixed;
+          inset: 0;
+          background: rgba(0,0,0,0.55);
+          z-index: 1000;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          animation: fadeIn 0.2s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .claw-phone {
+          width: 310px;
+          background: linear-gradient(160deg, #2a2a2e 0%, #1a1a1e 100%);
+          border-radius: 48px;
+          padding: 14px;
+          box-shadow:
+            0 0 0 1px rgba(255,255,255,0.08),
+            0 40px 100px rgba(0,0,0,0.7),
+            inset 0 1px 0 rgba(255,255,255,0.12);
+          position: relative;
+          animation: slideUp 0.35s cubic-bezier(.22,1,.36,1);
+        }
+        /* Side buttons */
+        .claw-phone::before {
+          content: '';
+          position: absolute;
+          left: -3px;
+          top: 90px;
+          width: 3px;
+          height: 34px;
+          background: #333;
+          border-radius: 3px 0 0 3px;
+          box-shadow: 0 44px 0 #333;
+        }
+        .claw-phone::after {
+          content: '';
+          position: absolute;
+          right: -3px;
+          top: 110px;
+          width: 3px;
+          height: 54px;
+          background: #333;
+          border-radius: 0 3px 3px 0;
+        }
+        @keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .claw-phone-inner {
+          background: #000;
+          border-radius: 36px;
+          overflow: hidden;
+          display: flex;
+          flex-direction: column;
+          height: 580px;
+        }
+        /* Status bar */
+        .claw-phone-statusbar {
+          background: #000;
+          padding: 10px 18px 4px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          flex-shrink: 0;
+        }
+        .claw-phone-time {
+          font-size: 13px;
+          font-weight: 700;
+          color: #fff;
+          font-family: -apple-system, sans-serif;
+          letter-spacing: -0.3px;
+        }
+        .claw-phone-icons {
+          display: flex;
+          align-items: center;
+          gap: 5px;
+        }
+        .claw-signal {
+          display: flex;
+          align-items: flex-end;
+          gap: 1.5px;
+          height: 11px;
+        }
+        .claw-signal span {
+          display: block;
+          width: 3px;
+          background: #fff;
+          border-radius: 1px;
+        }
+        .claw-signal span:nth-child(1) { height: 3px; }
+        .claw-signal span:nth-child(2) { height: 5px; }
+        .claw-signal span:nth-child(3) { height: 7px; }
+        .claw-signal span:nth-child(4) { height: 11px; }
+        /* wifi icon via svg-like borders */
+        .claw-wifi {
+          font-size: 11px;
+          color: #fff;
+          line-height: 1;
+        }
+        .claw-battery {
+          display: flex;
+          align-items: center;
+          gap: 1px;
+        }
+        .claw-battery-body {
+          width: 22px;
+          height: 11px;
+          border: 1.5px solid rgba(255,255,255,0.7);
+          border-radius: 2.5px;
+          padding: 1.5px;
+          position: relative;
+        }
+        .claw-battery-fill {
+          background: #fff;
+          border-radius: 1px;
+          height: 100%;
+          width: 75%;
+        }
+        .claw-battery-tip {
+          width: 2px;
+          height: 5px;
+          background: rgba(255,255,255,0.5);
+          border-radius: 0 1px 1px 0;
+        }
+        /* Dynamic island */
+        .claw-phone-island {
+          width: 100px;
+          height: 30px;
+          background: #000;
+          border-radius: 20px;
+          margin: 0 auto 6px;
+          position: relative;
+          z-index: 2;
+          flex-shrink: 0;
+          box-shadow: 0 0 0 1px rgba(255,255,255,0.06);
+        }
+        .claw-phone-screen {
+          background: #F8F2ED;
+          flex: 1;
+          overflow: hidden;
+          display: flex;
+          flex-direction: column;
+          border-radius: 0 0 34px 34px;
+        }
+        .claw-phone-topbar {
+          background: #fff;
+          padding: 10px 14px;
+          border-bottom: 1px solid rgba(42,31,25,0.08);
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+        .claw-phone-avatar {
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+          overflow: hidden;
+          flex-shrink: 0;
+          background: #F0E8E1;
+          box-shadow: 0 2px 8px rgba(230,92,70,0.2);
+        }
+        .claw-phone-name {
+          font-size: 13px;
+          font-weight: 700;
+          color: #2A1F19;
+          font-family: 'Manrope', sans-serif;
+        }
+        .claw-phone-status {
+          font-size: 11px;
+          color: #22c55e;
+          font-family: 'Manrope', sans-serif;
+          display: flex;
+          align-items: center;
+          gap: 3px;
+        }
+        .claw-phone-status::before {
+          content: '';
+          width: 6px;
+          height: 6px;
+          background: #22c55e;
+          border-radius: 50%;
+          display: inline-block;
+        }
+        .claw-phone-msgs {
+          flex: 1;
+          padding: 16px 12px;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          overflow-y: auto;
+          scroll-behavior: smooth;
+        }
+        .claw-msg {
+          max-width: 80%;
+          padding: 10px 14px;
+          border-radius: 18px;
+          font-size: 13px;
+          line-height: 1.5;
+          font-family: 'Manrope', sans-serif;
+          opacity: 0;
+          transform: translateY(8px);
+          transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        .claw-msg.visible { opacity: 1; transform: translateY(0); }
+        .claw-msg.ai {
+          background: #fff;
+          color: #2A1F19;
+          border-bottom-left-radius: 4px;
+          align-self: flex-start;
+          box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        }
+        .claw-msg.user {
+          background: #E65C46;
+          color: #fff;
+          border-bottom-right-radius: 4px;
+          align-self: flex-end;
+        }
+        .claw-typing {
+          display: flex;
+          gap: 4px;
+          align-items: center;
+          padding: 10px 14px;
+          background: #fff;
+          border-radius: 18px;
+          border-bottom-left-radius: 4px;
+          width: fit-content;
+          box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+          opacity: 0;
+          transition: opacity 0.3s;
+        }
+        .claw-typing.visible { opacity: 1; }
+        .claw-typing span {
+          width: 6px; height: 6px;
+          background: #9e8074;
+          border-radius: 50%;
+          animation: bounce 1.2s infinite;
+        }
+        .claw-typing span:nth-child(2) { animation-delay: 0.2s; }
+        .claw-typing span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes bounce {
+          0%, 60%, 100% { transform: translateY(0); }
+          30% { transform: translateY(-5px); }
+        }
+        .claw-demo-close {
+          position: absolute;
+          top: -16px;
+          right: -16px;
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+          background: #fff;
+          border: none;
+          cursor: pointer;
+          font-size: 18px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+          color: #2A1F19;
         }
 
         /* Category nav bar */
@@ -260,6 +607,23 @@ function HomeContent() {
           scrollbar-width: none;
         }
         .claw-cat-nav-inner::-webkit-scrollbar { display: none; }
+        .claw-cat-nav-divider {
+          width: 1px;
+          height: 20px;
+          background: rgba(42,31,25,0.15);
+          flex-shrink: 0;
+          margin: 0 6px;
+        }
+        .claw-cat-nav-group-label {
+          font-size: 11px;
+          font-weight: 700;
+          color: #9e8074;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+          white-space: nowrap;
+          flex-shrink: 0;
+          padding: 0 4px;
+        }
         .claw-cat-nav-pill {
           padding: 5px 14px;
           border-radius: 100px;
@@ -506,20 +870,82 @@ function HomeContent() {
         <div className="claw-hero">
           <div>
             <h1 className="claw-hero-title">
-              OpenClaw<span>机器人</span>员工市场
+              为你24小时干活的AI员工，<span>不需要发工资</span>
             </h1>
             <p className="claw-hero-subtitle">
-              我们的OpenClaw机器人，不仅仅是聊天机器人，是一个为你的业务定制搭建的数字工作者，了解你的业务，真正完成工作。<br />
               我们为你构建一个托管 AI 员工。它 24/7 工作，成本比人类低 90%，每个月都在变更好——因为我们一直在训练它。<br />
-              您无需进行繁琐的工程设计，您只需使用您的手机即可直接使用我们的OpenClaw员工。
+              不是聊天机器人。不是模板。一个为你的业务定制搭建的数字工作者，了解你的业务，使用你的工具，真正完成工作。
             </p>
           </div>
         </div>
 
+        {/* Demo modal */}
+        {showDemo && (
+          <div className="claw-demo-overlay" onClick={closeDemo}>
+            <div className="claw-phone" onClick={e => e.stopPropagation()}>
+              <button className="claw-demo-close" onClick={closeDemo}>×</button>
+              <div className="claw-phone-inner">
+                {/* Status bar */}
+                <div className="claw-phone-statusbar">
+                  <div className="claw-phone-time">9:41</div>
+                  <div className="claw-phone-icons">
+                    <div className="claw-signal">
+                      <span /><span /><span /><span />
+                    </div>
+                    <div className="claw-wifi">▲</div>
+                    <div className="claw-battery">
+                      <div className="claw-battery-body"><div className="claw-battery-fill" /></div>
+                      <div className="claw-battery-tip" />
+                    </div>
+                  </div>
+                </div>
+                {/* Dynamic island */}
+                <div className="claw-phone-island" />
+                {/* Chat screen */}
+                <div className="claw-phone-screen">
+                  <div className="claw-phone-topbar">
+                    <div className="claw-phone-avatar">
+                      <img src={currentDemoAvatar} alt="" width={36} height={36} style={{ borderRadius: '50%', display: 'block' }} />
+                    </div>
+                    <div>
+                      <div className="claw-phone-name">{currentDemoName}</div>
+                      <div className="claw-phone-status">在线</div>
+                    </div>
+                  </div>
+                <div className="claw-phone-msgs" ref={msgsRef}>
+                  {currentDemoMsgs.map((msg, i) => (
+                    visibleMsgs.includes(i) && (
+                      <div key={i} className={`claw-msg ${msg.type} visible`}
+                        style={{ whiteSpace: 'pre-line' }}>
+                        {msg.text}
+                      </div>
+                    )
+                  ))}
+                  {showTyping && (
+                    <div className="claw-typing visible">
+                      <span /><span /><span />
+                    </div>
+                  )}
+                </div>
+                </div>{/* end claw-phone-screen */}
+              </div>{/* end claw-phone-inner */}
+            </div>
+          </div>
+        )}
+
         {/* Category nav bar */}
         <div className="claw-cat-nav">
           <div className="claw-cat-nav-inner">
-            {CATEGORIES.map(cat => (
+            <button
+              className={`claw-cat-nav-pill${category === 'all' ? ' active' : ''}`}
+              onClick={() => setCategory('all')}
+            >
+              全部
+            </button>
+
+            <div className="claw-cat-nav-divider" />
+
+            {CATEGORIES_PERSONAS.map(cat => (
               <button
                 key={cat.value}
                 className={`claw-cat-nav-pill${category === cat.value ? ' active' : ''}`}
@@ -528,6 +954,15 @@ function HomeContent() {
                 {cat.label}
               </button>
             ))}
+
+            <div className="claw-cat-nav-divider" />
+
+            <button
+              className={`claw-cat-nav-pill${category === 'skills' ? ' active' : ''}`}
+              onClick={() => setCategory('skills')}
+            >
+              专有技能
+            </button>
             <div style={{ marginLeft: 'auto', flexShrink: 0 }}>
               <select
                 className="claw-sort-select"
@@ -547,7 +982,7 @@ function HomeContent() {
           <section className="claw-section">
             <div className="claw-section-header">
               <h2 className="claw-section-title">
-                {search ? `"${search}" 的搜索结果` : CATEGORIES.find(c => c.value === category)?.label}
+                {search ? `"${search}" 的搜索结果` : [...CATEGORIES_PERSONAS, ...CATEGORIES_SKILLS].find(c => c.value === category)?.label}
               </h2>
               <span className="claw-section-subtitle">{filtered.length} 个结果</span>
             </div>
@@ -556,7 +991,7 @@ function HomeContent() {
             ) : (
               <>
                 <div className="claw-grid">
-                  {filtered.length > 0 ? filtered.map(l => <ListingCard key={l.id} listing={l} />) : (
+                  {filtered.length > 0 ? filtered.map(l => <ListingCard key={l.id} listing={l} onDemo={openDemo} />) : (
                     <div className="claw-empty">
                       <div className="claw-empty-icon">🔍</div>
                       <p className="claw-empty-text">没有找到匹配的智能体，换个关键词试试吧。</p>
@@ -576,6 +1011,7 @@ function HomeContent() {
         ) : (
           <>
             {/* Section 1: Most Popular Personas */}
+            {category !== 'skills' && (
             <section className="claw-section">
               <div className="claw-section-header">
                 <h2 className="claw-section-title">最受欢迎的员工</h2>
@@ -586,7 +1022,7 @@ function HomeContent() {
               ) : (
                 <>
                   <div className="claw-grid">
-                    {personas.length > 0 ? personas.map(l => <ListingCard key={l.id} listing={l} />) : (
+                    {personas.length > 0 ? personas.map(l => <ListingCard key={l.id} listing={l} onDemo={openDemo} />) : (
                       <div className="claw-empty">
                         <div className="claw-empty-icon">🤖</div>
                         <p className="claw-empty-text">暂无角色，敬请期待。</p>
@@ -603,28 +1039,51 @@ function HomeContent() {
                 </>
               )}
             </section>
+            )}
 
-            <hr className="claw-section-divider" />
+            {category !== 'skills' && <hr className="claw-section-divider" />}
 
-            {/* Section 2: 最热门技能 */}
+            {/* Section 2: 员工专有技能 */}
+            {(category === 'all' || category === 'skills') && (
             <section className="claw-section">
               <div className="claw-section-header">
-                <h2 className="claw-section-title">最受欢迎的员工技能</h2>
+                <h2 className="claw-section-title">员工专有技能</h2>
                 <span className="claw-section-tag">顶级技能套餐</span>
+              </div>
+              {/* 技能子分类 */}
+              <div style={{ display: 'flex', gap: 6, marginBottom: 20, flexWrap: 'wrap' }}>
+                {[{ label: '全部技能', value: 'all' }, ...CATEGORIES_SKILLS].map(cat => (
+                  <button
+                    key={cat.value}
+                    onClick={() => setSkillSubCategory(cat.value)}
+                    style={{
+                      padding: '4px 14px', borderRadius: 999, fontSize: 13, fontWeight: 600,
+                      cursor: 'pointer', border: '1px solid rgba(42,31,25,0.15)',
+                      background: skillSubCategory === cat.value ? '#2A1F19' : 'transparent',
+                      color: skillSubCategory === cat.value ? '#fff' : '#6B5549',
+                      fontFamily: "'Manrope', sans-serif",
+                      transition: 'background 0.15s, color 0.15s',
+                    }}
+                  >
+                    {cat.label}
+                  </button>
+                ))}
               </div>
               {skillsLoading ? (
                 <SkeletonGrid />
               ) : (
                 <>
                   <div className="claw-grid">
-                    {skills.length > 0 ? skills.map(l => <ListingCard key={l.id} listing={l} />) : (
+                    {(skillSubCategory === 'all' ? skills : skills.filter(l => l.category === skillSubCategory))
+                      .map(l => <ListingCard key={l.id} listing={l} onDemo={openDemo} />)}
+                    {(skillSubCategory === 'all' ? skills : skills.filter(l => l.category === skillSubCategory)).length === 0 && (
                       <div className="claw-empty">
                         <div className="claw-empty-icon">✨</div>
                         <p className="claw-empty-text">暂无技能套餐，敬请期待。</p>
                       </div>
                     )}
                   </div>
-                  {skillsHasMore && (
+                  {skillsHasMore && skillSubCategory === 'all' && (
                     <div className="claw-load-more">
                       <button onClick={() => fetchSkills(true)} disabled={skillsLoading} className="claw-btn-ghost" style={{ padding: '12px 36px', fontSize: '14px' }}>
                         {skillsLoading ? <Loader2 size={16} /> : '查看更多技能'}
@@ -634,6 +1093,7 @@ function HomeContent() {
                 </>
               )}
             </section>
+            )}
           </>
         )}
 

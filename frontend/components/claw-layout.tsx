@@ -7,10 +7,11 @@ import { useAuth } from "@/lib/auth-context";
 import { LayoutDashboard, ShoppingBag, Settings, LogOut, Store, ChevronDown, Search, Menu, X } from "lucide-react";
 
 const NAV_LINKS = [
-  { label: "市场", href: "/" },
+  { label: "人才市场", href: "/" },
+  { label: "299元安装龙虾", href: "/install-service", accent: true },
   { label: "前沿", href: "/blog" },
   { label: "关于", href: "/about" },
-  { label: "定制", href: "/sourcing" },
+  { label: "技能定制", href: "/skill-custom" },
 ];
 
 export function ClawNav() {
@@ -215,25 +216,45 @@ export function ClawNav() {
             gap: 8,
           }}>
             <img src="/logo.png" alt="OpenClaw" style={{ width: 36, height: 36, objectFit: 'contain' }} />
-            CLAW MART
+            CLAW MART 龙虾市场
           </Link>
 
           {/* Desktop nav */}
           <div className="claw-nav-desktop">
             {NAV_LINKS.map(link => (
-              <Link
-                key={link.href}
-                href={link.href}
-                style={{
-                  fontSize: 14,
-                  fontWeight: 500,
-                  color: pathname === link.href ? '#2A1F19' : '#6B5549',
-                  textDecoration: 'none',
-                  fontFamily: "'Manrope', sans-serif",
-                }}
-              >
-                {link.label}
-              </Link>
+              link.accent ? (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  style={{
+                    fontSize: 13,
+                    fontWeight: 700,
+                    color: 'white',
+                    textDecoration: 'none',
+                    fontFamily: "'Manrope', sans-serif",
+                    background: '#E65C46',
+                    padding: '5px 12px',
+                    borderRadius: 100,
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {link.label}
+                </Link>
+              ) : (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  style={{
+                    fontSize: 14,
+                    fontWeight: 500,
+                    color: pathname === link.href ? '#2A1F19' : '#6B5549',
+                    textDecoration: 'none',
+                    fontFamily: "'Manrope', sans-serif",
+                  }}
+                >
+                  {link.label}
+                </Link>
+              )
             ))}
 
             <form onSubmit={handleNavSearch} className="claw-nav-search-form">
@@ -356,9 +377,16 @@ export function ClawNav() {
           />
         </form>
         {NAV_LINKS.map(link => (
-          <Link key={link.href} href={link.href} className="claw-mobile-nav-link" onClick={() => setMobileOpen(false)}>
-            {link.label}
-          </Link>
+          link.accent ? (
+            <Link key={link.href} href={link.href} className="claw-mobile-nav-link" onClick={() => setMobileOpen(false)}
+              style={{ color: '#E65C46' }}>
+              {link.label}
+            </Link>
+          ) : (
+            <Link key={link.href} href={link.href} className="claw-mobile-nav-link" onClick={() => setMobileOpen(false)}>
+              {link.label}
+            </Link>
+          )
         ))}
         <div style={{ marginTop: 12, borderTop: '1px solid rgba(42,31,25,0.08)', paddingTop: 12 }}>
           {isAuthenticated ? (

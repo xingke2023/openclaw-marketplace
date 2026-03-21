@@ -20,6 +20,7 @@ class Listing extends Model
         'image_url',
         'status',
         'category',
+        'demo_messages',
     ];
 
     public function user()
@@ -31,6 +32,7 @@ class Listing extends Model
     {
         return [
             'price' => 'decimal:2',
+            'demo_messages' => 'array',
         ];
     }
 }

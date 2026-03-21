@@ -55,6 +55,11 @@ export interface RegisterCredentials {
   password_confirmation: string;
 }
 
+export interface DemoMessage {
+  type: 'ai' | 'user';
+  text: string;
+}
+
 export interface Listing {
   id: number;
   user_id: number | null;
@@ -65,6 +70,7 @@ export interface Listing {
   image_url: string | null;
   status: string;
   category: string;
+  demo_messages: DemoMessage[] | null;
   created_at: string;
   updated_at: string;
   user?: {
