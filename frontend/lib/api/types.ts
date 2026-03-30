@@ -64,9 +64,11 @@ export interface Listing {
   id: number;
   user_id: number | null;
   name: string;
+  name_ja: string | null;
   slug: string;
   price: string;
   description: string | null;
+  description_ja: string | null;
   image_url: string | null;
   status: string;
   category: string;
@@ -94,8 +96,10 @@ export interface Purchase {
 
 export interface ListingFormData {
   name: string;
+  name_ja?: string;
   price: number;
   description?: string;
+  description_ja?: string;
   image_url?: string;
   category: string;
   status?: 'available' | 'draft' | 'sold';

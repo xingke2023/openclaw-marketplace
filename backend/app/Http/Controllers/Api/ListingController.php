@@ -96,12 +96,14 @@ class ListingController extends Controller
         $this->requireSeller($request);
 
         $validated = $request->validate([
-            'name'        => ['required', 'string', 'max:255'],
-            'price'       => ['required', 'numeric', 'min:0'],
-            'description' => ['nullable', 'string'],
-            'image_url'   => ['nullable', 'url'],
-            'category'    => ['required', 'string', 'max:100'],
-            'status'      => ['in:available,draft,sold'],
+            'name'           => ['required', 'string', 'max:255'],
+            'name_ja'        => ['nullable', 'string', 'max:255'],
+            'price'          => ['required', 'numeric', 'min:0'],
+            'description'    => ['nullable', 'string'],
+            'description_ja' => ['nullable', 'string'],
+            'image_url'      => ['nullable', 'url'],
+            'category'       => ['required', 'string', 'max:100'],
+            'status'         => ['in:available,draft,sold'],
         ]);
 
         $validated['user_id'] = $request->user()->id;
@@ -121,12 +123,14 @@ class ListingController extends Controller
         $listing = $this->findOwned($request, $id);
 
         $validated = $request->validate([
-            'name'        => ['sometimes', 'string', 'max:255'],
-            'price'       => ['sometimes', 'numeric', 'min:0'],
-            'description' => ['nullable', 'string'],
-            'image_url'   => ['nullable', 'url'],
-            'category'    => ['sometimes', 'string', 'max:100'],
-            'status'      => ['sometimes', 'in:available,draft,sold'],
+            'name'           => ['sometimes', 'string', 'max:255'],
+            'name_ja'        => ['nullable', 'string', 'max:255'],
+            'price'          => ['sometimes', 'numeric', 'min:0'],
+            'description'    => ['nullable', 'string'],
+            'description_ja' => ['nullable', 'string'],
+            'image_url'      => ['nullable', 'url'],
+            'category'       => ['sometimes', 'string', 'max:100'],
+            'status'         => ['sometimes', 'in:available,draft,sold'],
         ]);
 
         if (isset($validated['name'])) {

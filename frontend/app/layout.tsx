@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { AuthProvider } from "@/lib/auth-context";
-import { ThemeProvider } from "@/components/theme-provider";
+import { headers } from "next/headers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -98,7 +97,7 @@ const organizationSchema = {
     "@type": "ContactPoint",
     email: "xiaomi@xingke888.com",
     contactType: "customer support",
-    availableLanguage: ["Chinese", "English"],
+    availableLanguage: ["Chinese", "Japanese", "English"],
   },
 };
 
@@ -107,9 +106,7 @@ const websiteSchema = {
   "@type": "WebSite",
   name: "Claw Mart",
   url: BASE_URL,
-  description:
-    "专业的 AI 员工市场，提供即购即用的 OpenClaw AI 员工",
-  inLanguage: "zh-CN",
+  description: "专业的 AI 员工市场，提供即购即用的 OpenClaw AI 员工",
   potentialAction: {
     "@type": "SearchAction",
     target: {
@@ -120,13 +117,17 @@ const websiteSchema = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Read locale from next-intl middleware header for correct lang attribute
+  const headersList = await headers();
+  const locale = headersList.get("x-next-intl-locale") || "zh";
+
   return (
-    <html lang="zh-CN" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <head>
         <script
           type="application/ld+json"
@@ -138,14 +139,7 @@ export default function RootLayout({
         />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <AuthProvider>{children}</AuthProvider>
-        </ThemeProvider>
+        {children}
       </body>
     </html>
   );

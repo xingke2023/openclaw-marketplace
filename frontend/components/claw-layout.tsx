@@ -1,27 +1,29 @@
 'use client';
 
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { Link, usePathname, useRouter } from "@/lib/navigation";
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
+import { useTranslations, useLocale } from "next-intl";
 import { LayoutDashboard, ShoppingBag, Settings, LogOut, Store, ChevronDown, Search, Menu, X } from "lucide-react";
-
-const NAV_LINKS = [
-  { label: "人才市场", href: "/" },
-  { label: "299元安装龙虾", href: "/install-service", accent: true },
-  { label: "前沿", href: "/blog" },
-  { label: "关于", href: "/about" },
-  { label: "技能定制", href: "/skill-custom" },
-];
 
 export function ClawNav() {
   const { isAuthenticated, user, logout } = useAuth();
   const pathname = usePathname();
   const router = useRouter();
+  const t = useTranslations('nav');
+  const locale = useLocale();
   const [open, setOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [navSearch, setNavSearch] = useState("");
   const dropRef = useRef<HTMLDivElement>(null);
+
+  const NAV_LINKS = [
+    { label: t('marketplace'), href: "/" as const },
+    { label: t('installService'), href: "/install-service" as const, accent: true },
+    { label: t('blog'), href: "/blog" as const },
+    { label: t('about'), href: "/about" as const },
+    { label: t('skillCustom'), href: "/skill-custom" as const },
+  ];
 
   const handleNavSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -216,7 +218,7 @@ export function ClawNav() {
             gap: 8,
           }}>
             <img src="/logo.png" alt="OpenClaw" style={{ width: 36, height: 36, objectFit: 'contain' }} />
-            CLAW MART 龙虾市场
+            {t('brand')}
           </Link>
 
           {/* Desktop nav */}
@@ -262,11 +264,36 @@ export function ClawNav() {
               <input
                 type="text"
                 className="claw-nav-search-input"
-                placeholder="搜索技能..."
+                placeholder={t('searchPlaceholder')}
                 value={navSearch}
                 onChange={e => setNavSearch(e.target.value)}
               />
             </form>
+
+            {/* Language switcher */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 2, flexShrink: 0 }}>
+              <Link
+                href={pathname}
+                locale="zh"
+                style={{
+                  fontSize: 12, fontWeight: 700, padding: '4px 8px', borderRadius: 6,
+                  color: locale === 'zh' ? '#E65C46' : '#9e8074',
+                  background: locale === 'zh' ? 'rgba(230,92,70,0.1)' : 'transparent',
+                  textDecoration: 'none', fontFamily: "'Manrope', sans-serif",
+                }}
+              >中文</Link>
+              <span style={{ color: 'rgba(42,31,25,0.2)', fontSize: 11 }}>|</span>
+              <Link
+                href={pathname}
+                locale="ja"
+                style={{
+                  fontSize: 12, fontWeight: 700, padding: '4px 8px', borderRadius: 6,
+                  color: locale === 'ja' ? '#E65C46' : '#9e8074',
+                  background: locale === 'ja' ? 'rgba(230,92,70,0.1)' : 'transparent',
+                  textDecoration: 'none', fontFamily: "'Manrope', sans-serif",
+                }}
+              >日本語</Link>
+            </div>
 
             {isAuthenticated ? (
               <div ref={dropRef} style={{ position: 'relative' }}>
@@ -313,29 +340,29 @@ export function ClawNav() {
                     </div>
                     <Link href="/dashboard" className="claw-nav-drop-item" onClick={() => setOpen(false)}>
                       <LayoutDashboard size={15} style={{ color: '#6B5549' }} />
-                      Dashboard
+                      {t('dashboard')}
                     </Link>
                     <Link href="/dashboard?tab=purchases" className="claw-nav-drop-item" onClick={() => setOpen(false)}>
                       <ShoppingBag size={15} style={{ color: '#6B5549' }} />
-                      我的购买
+                      {t('myPurchases')}
                     </Link>
                     <Link href="/dashboard?tab=settings" className="claw-nav-drop-item" onClick={() => setOpen(false)}>
                       <Settings size={15} style={{ color: '#6B5549' }} />
-                      我的设置
+                      {t('mySettings')}
                     </Link>
                     {!user?.is_seller && (
                       <>
                         <hr className="claw-nav-drop-divider" />
                         <Link href="/dashboard?tab=sell" className="claw-nav-drop-item" onClick={() => setOpen(false)}>
                           <Store size={15} style={{ color: '#E65C46' }} />
-                          <span style={{ color: '#E65C46' }}>Start Selling</span>
+                          <span style={{ color: '#E65C46' }}>{t('startSelling')}</span>
                         </Link>
                       </>
                     )}
                     <hr className="claw-nav-drop-divider" />
                     <button className="claw-nav-drop-item danger" onClick={() => { setOpen(false); logout(); }}>
                       <LogOut size={15} />
-                      退出登录
+                      {t('logout')}
                     </button>
                   </div>
                 )}
@@ -353,13 +380,13 @@ export function ClawNav() {
                 textDecoration: 'none',
                 fontFamily: "'Manrope', sans-serif",
               }}>
-                登录 / 注册
+                {t('login')}
               </Link>
             )}
           </div>
 
           {/* Hamburger (mobile only) */}
-          <button className="claw-nav-hamburger" onClick={() => setMobileOpen(v => !v)} aria-label="菜单">
+          <button className="claw-nav-hamburger" onClick={() => setMobileOpen(v => !v)} aria-label={t('menu')}>
             {mobileOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
@@ -371,7 +398,7 @@ export function ClawNav() {
           <Search size={15} style={{ color: '#9e8074', flexShrink: 0 }} />
           <input
             type="text"
-            placeholder="搜索技能..."
+            placeholder={t('searchPlaceholder')}
             value={navSearch}
             onChange={e => setNavSearch(e.target.value)}
           />
@@ -391,14 +418,14 @@ export function ClawNav() {
         <div style={{ marginTop: 12, borderTop: '1px solid rgba(42,31,25,0.08)', paddingTop: 12 }}>
           {isAuthenticated ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-              <Link href="/dashboard" className="claw-mobile-nav-link" onClick={() => setMobileOpen(false)}>Dashboard</Link>
-              <Link href="/dashboard?tab=purchases" className="claw-mobile-nav-link" onClick={() => setMobileOpen(false)}>我的购买</Link>
-              <Link href="/dashboard?tab=settings" className="claw-mobile-nav-link" onClick={() => setMobileOpen(false)}>我的设置</Link>
+              <Link href="/dashboard" className="claw-mobile-nav-link" onClick={() => setMobileOpen(false)}>{t('dashboard')}</Link>
+              <Link href="/dashboard?tab=purchases" className="claw-mobile-nav-link" onClick={() => setMobileOpen(false)}>{t('myPurchases')}</Link>
+              <Link href="/dashboard?tab=settings" className="claw-mobile-nav-link" onClick={() => setMobileOpen(false)}>{t('mySettings')}</Link>
               <button
                 onClick={() => { setMobileOpen(false); logout(); }}
                 style={{ background: 'none', border: 'none', textAlign: 'left', padding: '12px 4px', fontSize: 16, fontWeight: 600, color: '#bf3f30', fontFamily: "'Manrope', sans-serif", cursor: 'pointer' }}
               >
-                退出登录
+                {t('logout')}
               </button>
             </div>
           ) : (
@@ -409,7 +436,7 @@ export function ClawNav() {
               fontWeight: 600, fontSize: 15, textDecoration: 'none',
               fontFamily: "'Manrope', sans-serif",
             }}>
-              登录 / 注册
+              {t('login')}
             </Link>
           )}
         </div>
@@ -419,6 +446,7 @@ export function ClawNav() {
 }
 
 export function ClawFooter() {
+  const t = useTranslations('footer');
   return (
     <footer style={{
       borderTop: '1px solid rgba(42, 31, 25, 0.1)',
@@ -468,13 +496,33 @@ export function ClawFooter() {
               CLAW MART
             </div>
             <p style={{ fontSize: 14, color: '#6B5549', lineHeight: 1.65, margin: 0 }}>
-              您的专业 AI 智能体和机器人资产分发市场。通过专家调优的角色和技能，帮助您自动化并扩展业务。
+              {t('tagline')}
             </p>
           </div>
           {[
-            { title: '平台', links: [{ label: '浏览智能体', href: '/' }, { label: '定制众包', href: '/sourcing' }, { label: '技术博客', href: '/blog' }] },
-            { title: '关于', links: [{ label: '关于我们', href: '/company' }, { label: '创作者计划', href: '#' }, { label: '帮助中心', href: '/help' }] },
-            { title: '法律', links: [{ label: '使用条款', href: '/terms' }, { label: '隐私政策', href: '/privacy' }] },
+            {
+              title: t('platform'),
+              links: [
+                { label: t('browseAgents'), href: '/' },
+                { label: t('sourcing'), href: '/sourcing' },
+                { label: t('techBlog'), href: '/blog' },
+              ]
+            },
+            {
+              title: t('about'),
+              links: [
+                { label: t('aboutUs'), href: '/company' },
+                { label: t('creatorProgram'), href: '#' },
+                { label: t('helpCenter'), href: '/help' },
+              ]
+            },
+            {
+              title: t('legal'),
+              links: [
+                { label: t('terms'), href: '/terms' },
+                { label: t('privacy'), href: '/privacy' },
+              ]
+            },
           ].map(col => (
             <div key={col.title}>
               <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: '#9e8074', marginBottom: 16 }}>
@@ -483,7 +531,7 @@ export function ClawFooter() {
               <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column' as const, gap: 10 }}>
                 {col.links.map(link => (
                   <li key={link.label}>
-                    <Link href={link.href} style={{ fontSize: 14, color: '#6B5549', textDecoration: 'none', fontWeight: 500 }}>
+                    <Link href={link.href as any} style={{ fontSize: 14, color: '#6B5549', textDecoration: 'none', fontWeight: 500 }}>
                       {link.label}
                     </Link>
                   </li>
@@ -493,7 +541,7 @@ export function ClawFooter() {
           ))}
         </div>
         <div className="claw-footer-bottom">
-          <span>© 2026 CLAW MART · An OpenClaw Project</span>
+          <span>{t('copyright')}</span>
           <div style={{ display: 'flex', gap: 20 }}>
             {['Twitter', 'Discord', 'GitHub'].map(s => (
               <a key={s} href="#" style={{ color: '#9e8074', textDecoration: 'none', fontSize: 13, fontWeight: 600 }}>{s}</a>
